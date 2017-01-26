@@ -1,0 +1,323 @@
+{% extends 'catalogo/main/base.html' %}
+{% load static %}
+
+{% block stylesheet %}
+    <style>
+
+        #canvas-holder{
+            width: 70%;
+            margin: 0 auto;
+            margin-top: 90px;
+        }
+        .skin-category h4{
+            font-family: dosis;
+            display: inline-block;
+            width: auto;
+            background: #424040;
+            padding: 10px 2px 3px 16px;
+            color: white;
+            float: right;
+            font-size: 2vw;
+            clear: both;
+
+        }
+
+        .skin-category h1{
+            font-family: dosis;
+            font-weight: bold;
+            font-size: 3.8em;
+            margin-bottom: 111px;
+        }
+
+        .skin-count{
+            text-align: center;
+            font-size: 5.5vw;
+            color: #424040;
+            padding-top: 10px;
+        }
+
+        @media (min-width: 1500px) {
+            .skin-category h4{
+                font-size: 2.2vw;
+            }
+        }
+
+
+        @media (min-width: 992px) {
+            .skin-category h1{
+                margin-bottom: 111px;
+            }
+        }
+
+        @media (max-width: 991px) {
+            #canvas-holder{
+                width: 95%;
+            }
+            .skin-category h4{
+                font-size: 2.7vw;
+            }
+
+            .skin-category h1{
+                margin-bottom: 95px;
+            }
+
+            p.skin-count{
+                font-size: 6.5vw;
+                padding-top: 20px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .skin-category h1{
+                text-align: center;
+                margin-bottom: 50px;
+            }
+
+            .skin-category h4{
+                display: table;
+                float: none;
+                width: auto;
+                font-size: 4vw;
+                clear: both;
+                margin: 4px auto;
+            }
+
+            #canvas-holder{
+                width: 60%;
+                margin-top: 65px;
+            }
+
+            h3.skin-block-title{
+                font-size: 4.5vw;
+                padding: 8px 10px 10px 48px;
+            }
+
+            .skin-body .skin-block{
+                background: 0;
+            }
+
+            .portfolio-item{
+                margin: 0;
+{#                border-bottom: 2px solid #424040;#}
+            }
+
+            .skin-body .skin-block .skin-conte-button{
+                bottom: 17%;
+            }
+
+            .skin-block .skin-conte-button button{
+                font-size: 6vw;
+{#                padding: 7px 18.3px;#}
+            }
+
+            .skin-body p.skin-count{
+                margin-top: -50px;
+                font-size: 5.5em;
+            }
+        }
+
+        @media (max-width: 597px) {
+            .skin-category h4{
+                font-size: 5vw;
+            }
+            .skin-category h1{
+                font-size: 12vw;
+            }
+        }
+
+        @media (max-width: 519px) {
+            #canvas-holder{
+                width: 80%;
+                margin-top: 55px;
+            }
+        }
+
+        @media (min-width: 1074px) {
+            .skin-body .skin-block-title{
+                font-size: 21px;
+            }
+
+            .skin-block .skin-conte-button button{
+                font-size: 30px;
+            }
+
+            p.skin-count{
+                padding-top: 0;
+                font-size: 65px;
+            }
+        }
+
+        @media (min-width: 1180px) {
+            .skin-body{
+                width: 90%;
+                margin: 50px auto 0;
+            }
+        }
+
+
+
+
+    </style>
+{% endblock %}
+{#{% block title %} hola {% endblock title %}#}
+
+{% block contenido %}
+    <!-- Page Header -->
+    <div class="row skin-introduction skin-category">
+        <div class="col-sm-6 col-md-5">
+            <h1 class=""><i class="fa fa-database skin-ico" aria-hidden="true"></i> Database</h1>
+
+            <h4>Repositorio de imágenes fotográficas</h4>
+            <h4>para el estudio y la</h4>
+            <h4>detección del cáncer de piel</h4>
+        </div>
+        <div class="col-sm-6 col-md-7">
+            <div id="canvas-holder" class="row">
+                <canvas id="chart-area" />
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <div class="row skin-body">
+
+    {% for item in list %}
+        <div id="cat-{{ item.id }}" class="col-sm-4 portfolio-item">
+                <div class="skin-block">
+                    <h3 class="skin-block-title">{{ item.name }}</h3>
+{#                    <p>{{ item.detail }}</p>#}
+                    <p class="skin-count">{{ item.countImage }}</p>
+                    <div class="skin-conte-button">
+                        <button class="source" data-id="{{ item.id }}"><i class="fa fa-flask" aria-hidden="true"></i></button>
+                        <button class="diseases" data-id="{{ item.id }}"><i class="fa fa-bug" aria-hidden="true"></i></button>
+                        <a href="{% url 'catalogo:diseases' item.id %}"><button><i class="fa fa-camera-retro" aria-hidden="true"></i></button></a>
+                    </div>
+                </div>
+        </div>
+    {% endfor %}
+
+    </div>
+
+{% endblock contenido %}
+
+{% block javascript %}
+    <script src="{% static 'catalogo/plugins/chartJS/Chart.bundle.min.js' %}"></script>
+    <script src="{% static 'catalogo/plugins/chartJS/utils.js' %}"></script>
+    <script>
+        var miChart;
+
+        $('.skin-ico').click(function () {
+            miChart.destroy();
+            var aux = 1;
+            getData('/catalogo/getStatusCategory',1);
+        });
+
+        $('.source').click(function () {
+            miChart.destroy();
+            var aux = $(this).data('id');
+            getData('/catalogo/getStatusSource_by_Category/'+aux);
+        });
+
+        $('.diseases').click(function () {
+            miChart.destroy();
+            var aux = $(this).data('id');
+            getData('/catalogo/getStatusDisease_by_Category/'+aux);
+        });
+
+        var getData = function (url , cen) {
+            console.log(url)
+            if (cen === undefined)
+                cen = 0;
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                dataType: 'json',
+                data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                },
+
+                success: function (data, textStatus) {
+                    console.log(data)
+                    a = data
+                    var total = data.datasets.data.length;
+                    var color = poolColors(total);
+
+
+                    if(cen == 1){
+                        var idc = data.idc;
+                        fillCategory(idc,color);
+                    }
+
+                    var config = {
+                        type: 'pie',
+                        data: {
+                            datasets:[{
+                                data: data.datasets.data,
+                                backgroundColor: color,
+                                label: data.datasets.label
+                            }],
+                            labels: data.labels
+                        },
+                        options: {
+                            responsive: true
+                        }
+                    };
+
+{#                    canvas = document.getElementById("chart-area");#}
+{#                    clear = canvas.getContext("2d");#}
+{#                    clear.clearRect(0, 0, canvas.width, canvas.height);#}
+
+                    var ctx = document.getElementById("chart-area").getContext("2d");
+                    miChart = new Chart(ctx, config);
+                },
+
+		        error: function(xhr, status, e) {
+		            alert(status, e);
+		        }
+            });
+        }
+
+        var fillCategory = function (idx,color) {
+
+            for(i = 0; i < color.length; i++)
+            {
+                $("#cat-"+idx[i][0]).css('background',color[i])
+{#                $("#cat-"+idx[i][0]+" div.skin-block").css('background',color[i])#}
+            }
+        }
+
+
+        var poolColors = function (a) {
+            var pool = [];
+            for(i=0;i<a;i++){
+                pool.push(dynamicLightColors(-10));
+            }
+            return pool;
+        }
+
+        var dynamicColors = function() {
+            var r = Math.floor(Math.random() * 255);
+            var g = Math.floor(Math.random() * 255);
+            var b = Math.floor(Math.random() * 255);
+            return "rgb(" + r + "," + g + "," + b + ")";
+        }
+
+        var dynamicLightColors = function(alpha) {
+            var h = Math.floor(Math.random() * 360);
+            var s = Math.floor((Math.random() * (100-90)) + 90);
+            var l = Math.floor((Math.random() * (86-75)) + 75);
+            var pastel = 'hsl(' + h + ', '+s+'%, '+l+'%)';
+            return pastel;
+        }
+
+
+        var randomScalingFactor = function() {
+            return Math.round(Math.random() * 100);
+        };
+
+        window.onload = function() {
+            getData('/catalogo/getStatusCategory',1);
+        };
+    </script>
+{% endblock %}

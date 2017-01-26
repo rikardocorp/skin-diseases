@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Login</title>
+    <link href="{% static 'catalogo/plugins/bootstrap3/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'catalogo/css/style.css' %}" rel="stylesheet">
+
+    <style>
+
+        .container{
+            background: #272727;
+            width: auto;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .form-signin {
+            width: 50%;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 420px;
+            padding: 30px 38px 66px;
+            background-color: #eee;
+            border: 1px dotted rgba(0,0,0,0.1);
+        }
+
+        form{
+            padding-bottom: 10px !important;
+        }
+
+        form a{
+            padding: 10px 0 0 0;
+            color: #669ae1;
+            font-weight: bold;
+            line-height: 5;
+        }
+
+        .form-signin-heading {
+          text-align:center;
+          margin-bottom: 30px;
+        }
+
+        .form-control {
+          position: relative;
+          font-size: 16px;
+          height: auto;
+          padding: 10px;
+        }
+
+        input[type="text"] {
+          margin-bottom: 0px;
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+
+        input[type="password"] {
+          margin-bottom: 20px;
+          border-top-left-radius: 0;
+          border-top-right-radius: 0;
+        }
+
+        .skinweb button{
+            background-color: #424040;
+            border-color: #3c3b3b;
+        }
+
+        .skinweb button:hover{
+            background-color: #717171;
+        }
+
+        .colorgraph{
+          height: 7px;
+          border-top: 0;
+          background: #c4e17f;
+          border-radius: 5px;
+          background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+          background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+          background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+          background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+        }
+    </style>
+</head>
+<body class="skinweb">
+
+
+    <div class = "container">
+        <form action="" method="post" name="Login_Form" class="form-signin">
+            <h3 class="form-signin-heading">Login - Diseases Skin</h3>
+                <hr class="colorgraph"><br>
+                {% csrf_token %}
+                <input type="text" class="form-control" name="username" placeholder="Username" required="" autofocus="" />
+                <input type="password" class="form-control" name="password" placeholder="Password" required=""/>
+
+                <button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Login" type="Submit">Login</button>
+            <a href="{% url 'catalogo:index' %}"><< Página Web</a>
+        </form>
+    </div>
+
+
+
+    <!-- jQuery -->
+    <script src="{% static 'catalogo/plugins/jquery/jquery-1.12.4.min.js' %}"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'catalogo/plugins/bootstrap3/js/bootstrap.min.js' %}"></script>
+
+</body>
+</html>

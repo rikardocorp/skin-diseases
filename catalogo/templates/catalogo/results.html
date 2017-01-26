@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultados</title>
+</head>
+<body>
+
+    <h1>{{ category.name }}</h1>
+    <p>{{ category.state }}</p>
+
+    <a href="{% url 'catalogo:detail' category.id %}">back?</a>
+</body>
+</html>

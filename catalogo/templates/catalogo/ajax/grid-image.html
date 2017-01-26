@@ -1,0 +1,26 @@
+{% load static %}
+
+{% for img in imageskin %}
+            <li id="list-{{ img.id }}" class="white-panel" data-id="{{ img.id }}">
+                {% if userLog %}
+                    {% if img.state %}
+                        <div>
+                    {% else %}
+                        <div class="image-bug">
+                            <i class="fa fa-bug" aria-hidden="true"></i>
+
+                    {% endif %}
+                        <img src="{{ img.docfile.url }}" data-remote="{% url 'catalogo:viewImageskin' img.id %}" data-parent data-toggle="lightbox" data-gallery="remoteload">
+                {% else %}
+                    <div>
+                        <a href="{{ img.docfile.url }}" data-toggle="lightbox" data-gallery="hidden-images">
+                            <img src="{{ img.docfile.url }}">
+                        </a>
+                {% endif %}
+                    <div class="panel-text">
+                        <h4>{{ img.name }} {{ img.id }}</h4>
+                        <p>{{ img.detail }}</p>
+                    </div>
+                </div>
+            </li>
+{% endfor %}

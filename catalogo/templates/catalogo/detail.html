@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Categoria</title>
+</head>
+<body>
+    <h1>{{ category.name }}</h1>
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    <form action="{% url 'catalogo:state' category.id %}" method="post">
+        {% csrf_token %}
+
+        <input type="checkbox" name="state" id="state" value="{{ category.state }}" {% if category.state %}checked{% endif %}>
+        <label for="state">On/Off</label>
+        <input type="submit" value="Guardar">
+    </form>
+
+
+
+    <ul>
+        {% for disease in category.disease_set.all %}
+            <li>{{ disease.name }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,100 @@
+{% extends 'catalogo/main/base.html' %}
+{% load static %}
+
+{% block title %}Drag and Drop Upload{% endblock %}
+
+
+{% block stylesheet %}
+    <link href="{% static 'catalogo/plugins/bootstrap-select/dist/css/bootstrap-select.min.css' %}" rel="stylesheet">
+    <style>
+
+        .bootstrap-select>.dropdown-toggle.bs-placeholder, .bootstrap-select>.dropdown-toggle.bs-placeholder:active, .bootstrap-select>.dropdown-toggle.bs-placeholder:focus, .bootstrap-select>.dropdown-toggle.bs-placeholder:hover{
+            color: #313131;
+        }
+
+        #uploadImage{
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block contenido %}
+    <form id="uploadImage" method="post" enctype="multipart/form-data" class="form-inline text-center">
+        {% csrf_token %}
+        <div class="form-group">
+            <select name="disease" class="selectpicker" data-style="btn-primary" title="Elige la enfermedad...">
+                {% for dis in diseases %}
+                    <option value="{{ dis.id }}">{{ dis.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <select name="sourcedata" class="selectpicker" data-style="btn-info" title="Elige la fuente...">
+                {% for sour in sources %}
+                    <option value="{{ sour.id }}">{{ sour.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="name" value="" placeholder="Prefijo" class="form-control" title="Nombre de imagen">
+        </div>
+
+        <input id="fileupload" type="file" name="docfile" multiple style="display: none;" data-url="{% url 'catalogo:drag_and_drop_upload' %}">
+    </form>
+
+    <div class="well text-muted text-center" style="padding-top: 4rem; padding-bottom: 4rem;">
+        <span class="glyphicon glyphicon-arrow-down" style="font-size: 4rem;"></span>
+        <h3>Drop Photos Here to Upload</h3>
+    </div>
+
+
+    <table id="gallery" class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Photo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for photo in images %}
+            <tr>
+                <td><a href="{{ photo.docfile.url }}">{{ photo.docfile.name }}</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+
+{% block javascript %}
+    {# JQUERY FILE UPLOAD SCRIPTS #}
+    <script src="{% static 'catalogo/plugins/bootstrap-select/dist/js/bootstrap-select.min.js' %}"></script>
+    <script src="{% static 'catalogo/plugins/jquery-file-upload/vendor/jquery.ui.widget.js' %}"></script>
+    <script src="{% static 'catalogo/plugins/jquery-file-upload/jquery.iframe-transport.js' %}"></script>
+    <script src="{% static 'catalogo/plugins/jquery-file-upload/jquery.fileupload.js' %}"></script>
+    {# PHOTOS PAGE SCRIPTS #}
+    <script>
+        $(function () {
+          $(".js-upload-photos").click(function () {
+            $("#fileupload").click();
+          });
+
+          $("#fileupload").fileupload({
+            dataType: 'json',
+            done: function (e, data) {
+              if (data.result.is_valid) {
+                $("#gallery tbody").prepend(
+                  "<tr><td><a href='" + data.result.url + "'>" + data.result.name + "</a></td></tr>"
+                )
+              }else{
+                  $('#skin-message').html(data.result.msg).removeClass().addClass('alert alert-danger').click()
+
+              }
+            }
+          });
+
+        });
+    </script>
+{% endblock %}

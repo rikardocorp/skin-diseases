@@ -1,0 +1,177 @@
+@font-face {
+    font-family: dosis;
+    src: url(../fonts/Dosis/Dosis-Light.ttf);
+}
+
+@font-face {
+    font-family: dosis-regular;
+    src: url(../fonts/Dosis/Dosis-Regular.ttf);
+}
+
+/*@font-face {*/
+    /*font-family: dosis-semibold;*/
+    /*src: url(../fonts/Dosis/Dosis-SemiBold.ttf);*/
+/*}*/
+
+/*@font-face {*/
+    /*font-family: dosis-extrabold;*/
+    /*src: url(../fonts/Dosis/Dosis-ExtraBold.ttf);*/
+/*}*/
+
+
+/*@font-face {*/
+    /*font-family: overpass;*/
+    /*src: url(../fonts/Overpass_Mono/OverpassMono-Light.ttf);*/
+/*}*/
+
+/*@font-face {*/
+    /*font-family: quicksand;*/
+    /*src: url(../fonts/Quicksand/Quicksand-Light.ttf);*/
+/*}*/
+
+@media (min-width: 768px){
+    .navbar-nav {
+        float: right;
+    }
+}
+
+@media (max-width: 767px){
+    .navbar-nav {
+        text-align: center;
+    }
+}
+
+body{
+    font-family: dosis-regular !important;
+}
+
+button:focus{
+    outline: none;
+}
+
+.skin-ico{
+    cursor: pointer;
+}
+
+
+#skin-message{
+    margin-top: -20px;
+    margin-bottom: 0;
+    text-align: center;
+    cursor: pointer;
+}
+
+h1.page-header{
+    margin-top: 25px;
+}
+
+a{
+    color: #424040;
+}
+
+.skin-block{
+    display: block;
+    width: 100%;
+    /*background: rgba(0, 0, 0, 0.09);*/
+    height: 250px;
+    text-align: right;
+}
+
+.skin-block .skin-conte-button{
+    text-align: center;
+    bottom: 20%;
+    display: block;
+    position: absolute;
+    width: 100%;
+    margin: -15px;
+}
+
+.skin-block button{
+    font-size: 2.7vw;
+    color: rgba(0, 0, 0, 0.31);
+    background: rgba(51, 51, 51, 0.08);
+    border: 0;
+    margin: 5px;
+    padding: 12px 18.3px;
+    border-radius: 50%;
+    transition: all .5s;
+    -webkit-transition: all .5s;
+}
+
+.skin-block button:hover, .skin-block button:focus{
+    color: rgb(255, 255, 255);
+    background: rgba(0, 0, 0, 0.75);
+    zoom: 1.15;
+    transition: all .5s;
+    -webkit-transition: all .5s;
+}
+
+.portfolio-item{
+    padding: 15px;
+    background: #efefef;
+}
+
+.skin-block-title{
+    background: #424040;
+    margin: 0;
+    display: inline-block;
+    color: #fdfdfd;
+    font-family: dosis-regular;
+    font-size: 2vw;
+    padding: 3% 4% 3% 14%;
+    margin-right: -13px;
+}
+
+
+.skin-conte-circle .skin-circle{
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: black;
+    overflow: hidden;
+
+    background-repeat: no-repeat;
+    background-attachment: local;
+    background-position: 50% 50%;
+    background-size: 170%;
+    transition: all .5s;
+}
+
+.skin-conte-circle .skin-circle:hover{
+    background-size: 200%;
+    box-shadow: 0px 0px 1px 1px #222222;
+    transition: all .5s;
+}
+
+.skin-conte-circle .skin-circle a{
+    width: inherit;
+    height: inherit;
+    display: block;
+}
+
+.skin-conte-circle h3{
+    margin-top: 7px;
+    margin-bottom: 5px;
+}
+
+.skin-conte-circle p{
+    margin-bottom: 30px;
+}
+
+.skin-body{
+    margin-top: 50px;
+}
+
+.skin-introduction p {
+    font-size: 1.2em;
+    margin: 30px 30px 0;
+}
+
+/*  */
+
+div.toggle{
+    right: 0;
+    position: absolute;
+    margin-top: 6px;
+    margin-right: 20px;
+}

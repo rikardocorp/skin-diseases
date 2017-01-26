@@ -1,0 +1,242 @@
+{% extends 'catalogo/main/base.html' %}
+{% load static %}
+
+
+{# CSS #}
+{% block stylesheet %}
+    <link href="{% static 'catalogo/plugins/bootstrap-toggle/css/bootstrap-toggle.min.css' %}" rel="stylesheet">
+    <link href="{% static 'catalogo/css/pinterest-like.css' %}" rel="stylesheet">
+    <link href="{% static 'catalogo/plugins/lightbox/dist/ekko-lightbox.min.css' %}" rel="stylesheet">
+    {% if user.is_authenticated %}
+        <style>
+            .skinWeb .modal-dialog{
+                max-width: 2000px !important;
+            }
+        </style>
+    {% endif %}
+
+{% endblock stylesheet %}
+
+
+
+{# CONTENIDO #}
+{% block contenido %}
+    <!-- Introduction Row -->
+    <div class="row skin-introduction">
+        <div class="col-lg-12">
+            <h1>
+                <a href="{% url 'catalogo:index' %}"><i class="fa fa-database skin-ico" aria-hidden="true"></i></a>
+                <a href="{% url 'catalogo:diseases' disease.category_id %}">{{ disease.category.name}}</a> / {{ disease.name }}
+                <input id="toggle-event" data-id="{{ disease.id }}" type="checkbox" {% if disease.state %}checked{% endif %} data-toggle="toggle" data-size="small" data-onstyle="default">
+            </h1>
+            <p>{{ disease.detail }}</p>
+{#            <button id="prueba" data-url="{% url 'catalogo:loadImageskin' disease.id 1 %}">Prueba</button>#}
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <ul id="waterfall" class=""></ul>
+    <div class="loading-img"></div>
+{% endblock contenido %}
+
+
+{# JAVASCRIPT #}
+{% block javascript %}
+    <script src="{% static 'catalogo/plugins/bootstrap-toggle/js/bootstrap-toggle.min.js' %}"></script>
+    <script src="{% static 'catalogo/plugins/pinterest-style/newWaterfall.js' %}"></script>
+    <script src="{% static 'catalogo/plugins/lightbox/dist/ekko-lightbox.js' %}"></script>
+
+    <script>
+        var gate = 0;
+        var numPage = 1;
+        $(document).ready(function() {
+
+            $('#waterfall').NewWaterfall({
+                width:260,
+            });
+
+            // Cambia el estado de activo e inactivo
+            $('#toggle-event').change(function (){
+                $.ajax({
+                    type: 'POST',
+                    url: '/catalogo/changeState',
+                    dataType: 'json',
+                    data: {
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                        'model': 'disease',
+                        'id': $(this).attr('data-id'),
+                        'state': $(this).prop('checked'),
+                    },
+
+                    success: function (data, textStatus) {
+                        $('#skin-message').html(data['msg']).removeClass().addClass('alert alert-success').click()
+                    },
+
+                    error: function(xhr, status, e) {
+                        alert(status, e);
+                    }
+                });
+            });
+
+            // Cambia el estado de activo e inactivo
+            $('body').on('change','#toggle-event-image', function () {
+
+                idImage = $(this).data('id');
+                $.ajax({
+                    type: 'POST',
+                    url: '/catalogo/changeState',
+                    dataType: 'json',
+                    data: {
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                        'model': 'imageskin',
+                        'id': $(this).attr('data-id'),
+                        'state': $(this).prop('checked'),
+                    },
+
+                    success: function (data, textStatus) {
+                        $list = $('#list-'+idImage+' > div');
+
+                        if (data.state)
+                            $list.removeClass('image-bug').find('i').remove();
+                        else
+                            $list.addClass('image-bug').prepend('<i class="fa fa-bug" aria-hidden="true"></i>');
+
+
+                    },
+
+                    error: function(xhr, status, e) {
+                        alert(status, e);
+                    }
+                });
+            });
+
+
+            $('#prueba').click(function () {
+                urlx = '/catalogo/imageskin/{{ disease.id }}/'+ numPage +'/';
+                console.log(urlx);
+
+                scroll_load_data(urlx);
+            });
+
+            //  Close Modal
+            $('body').on('click','i.image-view-close',function () {
+                $('.modal-header button.close').click();
+            });
+
+            // hacer comentario en imagen
+            $('body').on('click','.image-view-input span',function (){
+                $('ul.chat li.error-msg').remove();
+                $.ajax({
+                    type: 'POST',
+                    url: '/catalogo/commentPush',
+                    dataType: 'json',
+                    data: {
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                        'idx': $('.image-view-pic').data('id'),
+                        'text': $('#comment-image-skin').val(),
+                    },
+
+                    success: function (data, textStatus) {
+{#                        $('#skin-message').html(data['msg']).removeClass().addClass('alert alert-success').click()#}
+                        console.log(data);
+                        if (data.status){
+                            $('ul.chat').append(
+                                '<li class="right clearfix">'+
+                                    '<span class="chat-img">'+data.nameshort+'</span>'+
+                                    '<div class="chat-body clearfix">'+
+                                        '<div class="header">'+
+                                            '<strong class="pull-right primary-font">'+data.nameUser+'</strong>'+
+                                            '<small class=" text-muted"><span class="glyphicon glyphicon-time"></span>Reciente</small>'+
+                                        '</div>'+
+                                        '<p>'+$('#comment-image-skin').val()+'</p>'+
+                                    '</div>'+
+                                '</li>').promise().done(function () {
+                                    haux = $('div.panel-body').height()
+                                    $('div.panel-body').scrollTop(haux);
+                                    $('#comment-image-skin').val('');
+                                });
+
+                        }else{
+                            $('ul.chat').append('<li class="error-msg"><p class="bg-danger">'+data.msg+'</p></li>');
+                        }
+                    },
+
+                    error: function(xhr, status, e) {
+                        alert(status, e);
+                    }
+                });
+            });
+        });
+
+
+        // funcion para cargar mas imagenes
+        var scroll_load_data = function (url) {
+
+            if (gate==0)
+            {
+                gate = 1;
+                $('.loading-img').html('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>');
+
+                $.ajax({
+                    type: 'POST',
+                    url: urlx,
+                    dataType: 'json',
+                    data: {
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                    },
+                    success: function (data, textStatus) {
+                        if (data.data) {
+                            $('#waterfall').append(data.data).promise().done(function () {
+                                gate = 0;
+                                numPage++;
+                                $('.loading-img').html('');
+                            })
+                        }else{
+                            $('.loading-img').html('<p>No hay mas resultados...</p>');
+                        }
+                    },
+                    error: function(xhr, status, e) {
+                        alert(status, e);
+                    }
+                });
+            }
+        };
+
+        // Cargar datos - event scroll
+        setInterval(function(){
+			if($(window).scrollTop() >= $(document).height() - $(window).height() + 0  && !gate)
+			{
+                console.log('abierto');
+				urlx = '/catalogo/imageskin/{{ disease.id }}/'+ numPage +'/';
+                console.log(urlx);
+                scroll_load_data(urlx);
+			}
+		},60);
+
+        // Para el modal
+        $(document).delegate('*[data-toggle="lightbox"]:not([data-gallery="navigateTo"])', 'click', function(event) {
+            event.preventDefault();
+            return $(this).ekkoLightbox({
+                onContentLoaded: function () {
+                    var a = $('.image-view .image-view-pic img');
+                    if (a[0].width > a[0].height){
+                        a.addClass('centered-image');
+                    }
+                },
+                onShown: function() {
+                    if (window.console) {
+                        return console.log('Checking our the events huh?');
+                    }
+                },
+                onNavigate: function(direction, itemIndex) {
+                    if (window.console) {
+                        return console.log('Navigating '+direction+'. Current item: '+itemIndex);
+                    }
+                },
+                always_show_close : false,
+                loadingMessage : '<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>',
+            });
+        });
+
+    </script>
+{% endblock javascript %}

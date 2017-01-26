@@ -1,0 +1,374 @@
+
+ul,li{
+  padding: 0;
+}
+
+#waterfall {
+  margin-top: 30px;
+  padding: 0;
+}
+
+#waterfall li {
+  left: 0;
+  top: 0;
+  opacity: 0;
+  list-style: none;
+  transform: translateY(100px);
+}
+
+#waterfall li.show {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s, top 1s;
+}
+
+#waterfall li > div {
+  overflow: hidden;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.22);
+  color: rgba(0,0,0,0.6);
+  margin: 10px;
+  background: rgb(255,255,255);
+  transition: all 0.5s;
+}
+
+#waterfall li > div:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 12px rgba(183, 183, 183, 0.88);
+  transition: all 0.3s;
+}
+
+
+li.white-panel {
+  font-size: 1em;
+}
+
+li.white-panel div.image-bug{
+    box-shadow: 0px 0px 0.2px 2px #a94442 !important;
+}
+
+li.white-panel div.image-bug >i {
+    position: absolute;
+    top: 22px;
+    left: 22px;
+    transform: rotate(54deg);
+    font-size: 2em;
+    /*color: #a94442;*/
+    color: #ca3634;
+    text-shadow: 1px 2px 0px black;
+}
+
+li.white-panel div.image-bug .panel-text{
+     background: #a94442;
+}
+
+li.white-panel div.image-bug .panel-text h4{
+     color: white;
+}
+
+li.white-panel img {
+	width: 100%;
+    cursor: pointer;
+}
+
+li.white-panel .panel-text *{
+      padding: 0;
+    margin: 0;
+}
+
+li.white-panel .panel-text{
+    padding: 10px;
+}
+
+
+li.white-panel .panel-text h4{
+    font-family: dosis;
+    color: #424242;
+    font-weight: bolder;
+    font-size: 1.15em;
+}
+
+
+
+.loading-img{
+    display: block;
+    width: 100%;
+    /*height: 50px;*/
+    margin-top: 30px;
+    text-align: center;
+    font-size: 1em;
+}
+
+.loading-img p{
+  font-size: 1.3em;
+    padding: 20px;
+    color: #8c8c8c;
+}
+
+
+
+/* css modal  */
+
+.skinWeb .modal-loading{
+    text-align: center;
+    padding: 10%;
+    text-shadow: 0px 0px 3px black;
+    color: white;
+}
+
+.skinWeb .modal-content{
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+}
+
+.skinWeb .modal-dialog{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) !important;
+    width: 95% !important;
+    max-width: 2000px;
+    max-height: 750px;
+    overflow: auto;
+
+}
+
+.ekko-lightbox-container{
+    border: none;
+}
+
+.ekko-lightbox-container > div:first-child > img{
+    margin: 0 auto;
+}
+
+.skinWeb .modal-dialog .modal-body{
+    padding: 0;
+    transition: all .5s;
+    -webkit-transition: all .5s;
+    border-radius: 7px;
+    overflow: hidden;
+}
+
+
+.image-view{
+    margin: 0;
+    background: white;
+}
+
+.image-view img{
+    width: 100%;
+}
+
+
+.image-view-pic .image-opc-buttons{
+    position: fixed;
+    top: 7px;
+    left: 8px;
+}
+
+
+.image-view-pic .image-opc-buttons > .toggle{
+    position: relative;
+    margin: 0;
+}
+
+.image-view img.centered-image{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.image-view > div.image-view-pic{
+    background: #1a1a1a;
+}
+
+.image-view > div.image-view-text{
+    padding: 10px;
+}
+
+.image-view > div.image-view-text .view-date{
+    letter-spacing: 2px;
+    font-size: 0.9em;
+    float: right;
+    padding-top: 3px;
+}
+
+.image-view > div.image-view-text .view-disease-name{
+    font-size: 0.84em;
+}
+
+.image-view > div.image-view-text .view-source{
+    margin-top: 2px;
+}
+
+.image-view > div.image-view-text .image-view-input span{
+    cursor: pointer;
+}
+
+.image-view > div.image-view-text .image-view-input span:hover i{
+    color: #3e3e3e;
+}
+
+.image-view > div.image-view-pic{
+    font-size: .9em;
+}
+
+.image-view > div.image-view-pic i{
+    background: rgba(53, 53, 53, 0.83);
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid black;
+}
+
+.image-view .image-view-close{
+    position: absolute;
+    top: 9px;
+    right: 10px;
+    font-size: 1.3em;
+    color: #ababab;
+    cursor: pointer;
+}
+
+.image-view .image-view-close:hover{
+    color: #4d4d4d;
+    font-size: 1.6em;
+}
+
+.image-view div.image-view-input{
+    position: absolute;
+    bottom: 12px;
+    left: 0;
+    width: 95%;
+    margin: 0 2.5% 0 2.5%;
+}
+
+.image-view > div{
+    overflow: auto;
+    max-height: 700px;
+    padding: 0;
+    min-height: 700px;
+}
+
+.image-view-text{
+}
+
+.image-view-text h2{
+    padding: 0;
+    margin: 10px 0 0;
+}
+
+
+@media (min-width: 1180px)
+{
+    .skinWeb .modal-dialog{
+        width: 75% !important;
+    }
+}
+
+
+
+/* Panel de comentarios */
+
+.chat
+{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.chat .left > span{
+    float: left !important;
+}
+
+.chat .left .header small{
+    float: right !important;
+}
+
+.chat .right > span{
+    float: right !important;
+}
+
+.chat .right strong{
+    float: right;
+}
+
+.chat .chat-img{
+    width: 52px;
+    height: 52px;
+    background: #a1b2e6;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 2.4;
+    font-weight: bold;
+    font-size: 1.5em;
+    border: 1px solid gray;
+    color: white;
+    text-shadow: 0px 0px 1px black;
+    margin-top: 5px;
+}
+
+.chat .right .chat-img{
+    background: #a4daa2;
+}
+
+.chat li
+{
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #B3A9A9;
+}
+
+.chat li.left .chat-body
+{
+    margin-left: 60px;
+}
+
+.chat li.right .chat-body
+{
+    margin-right: 60px;
+}
+
+
+.chat li .chat-body p
+{
+    margin: 0;
+    color: #777777;
+}
+
+.panel .slidedown .glyphicon, .chat .glyphicon
+{
+    margin-right: 5px;
+}
+
+.panel-body
+{
+    overflow-y: scroll;
+    height: 506px;
+    width: 100%;
+    position: absolute;
+    margin: 13px 0px 0px -11px;
+}
+
+.panel-body::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+}
+
+.panel-body::-webkit-scrollbar
+{
+    width: 8px;
+    background-color: #F5F5F5;
+}
+
+.panel-body::-webkit-scrollbar-thumb
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #555;
+}
+
+
+ul.chat p.bg-danger{
+    padding: 12px 0px;
+    text-align: center;
+}
