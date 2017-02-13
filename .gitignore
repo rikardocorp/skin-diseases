@@ -91,3 +91,5 @@ ENV/
 .idea/
 db.sqlite3
 media/
+skinWeb/settings.py
+static/
