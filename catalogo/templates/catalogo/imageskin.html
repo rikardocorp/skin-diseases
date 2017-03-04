@@ -30,13 +30,15 @@
                 <input id="toggle-event" data-id="{{ disease.id }}" type="checkbox" {% if disease.state %}checked{% endif %} data-toggle="toggle" data-size="small" data-onstyle="default">
             </h1>
             <p>{{ disease.detail }}</p>
-{#            <button id="prueba" data-url="{% url 'catalogo:loadImageskin' disease.id 1 %}">Prueba</button>#}
         </div>
     </div>
     <!-- /.row -->
 
     <ul id="waterfall" class=""></ul>
     <div class="loading-img"></div>
+    <div id="more_images">
+        <button id="prueba" data-url="{% url 'catalogo:loadImageskin' disease.id 1 %}"><i class="fa fa-chevron-circle-down" aria-hidden="true"></i></button>
+    </div>
 {% endblock contenido %}
 
 
@@ -140,7 +142,7 @@
 {#                        $('#skin-message').html(data['msg']).removeClass().addClass('alert alert-success').click()#}
                         console.log(data);
                         if (data.status){
-                            $('ul.chat').append(
+                            $('ul.chat').prepend(
                                 '<li class="right clearfix">'+
                                     '<span class="chat-img">'+data.nameshort+'</span>'+
                                     '<div class="chat-body clearfix">'+
@@ -151,13 +153,13 @@
                                         '<p>'+$('#comment-image-skin').val()+'</p>'+
                                     '</div>'+
                                 '</li>').promise().done(function () {
-                                    haux = $('div.panel-body').height()
-                                    $('div.panel-body').scrollTop(haux);
+{#                                    haux = $('div.panel-body').height()#}
+{#                                    $('div.panel-body').scrollTop(haux);#}
                                     $('#comment-image-skin').val('');
                                 });
 
                         }else{
-                            $('ul.chat').append('<li class="error-msg"><p class="bg-danger">'+data.msg+'</p></li>');
+                            $('ul.chat').prepend('<li class="error-msg"><p class="bg-danger">'+data.msg+'</p></li>');
                         }
                     },
 

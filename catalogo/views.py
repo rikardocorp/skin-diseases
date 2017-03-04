@@ -10,6 +10,7 @@ from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 import time
+from django.utils import timezone
 
 # Create your views here.
 
@@ -34,7 +35,7 @@ def ImageViewer(request, id, idcomment):
     template_name = 'catalogo/image_viewer.html'
     userLogId = request.user.id
     image = Imageskin.objects.get(id=id)
-    message = Commentimage.objects.all().filter(imageskin=id)
+    message = Commentimage.objects.all().filter(imageskin=id).order_by('-pub_date')
 
     # Para registrar la vista del usuario
     _user = User.objects.get(id=userLogId)
@@ -60,7 +61,7 @@ def ImageViewer2(request, id):
     template_name = 'catalogo/image_viewer.html'
     userLogId = request.user.id
     image = Imageskin.objects.get(id=id)
-    message = Commentimage.objects.all().filter(imageskin=id)
+    message = Commentimage.objects.all().filter(imageskin=id).order_by('-pub_date')
 
     # imageDetail = render_to_string('catalogo/ajax/view-image.html', {'image': image, 'message': message, 'userLogId': userLogId})
     return render(request, template_name, {'image': image, 'message': message, 'userLogId': userLogId})
@@ -128,7 +129,7 @@ def loadImageskin(request, id, page):
 def viewImageskin(request, id):
     userLogId = request.user.id
     image = Imageskin.objects.get(id=id)
-    message = Commentimage.objects.all().filter(imageskin=id)
+    message = Commentimage.objects.all().filter(imageskin=id).order_by('-pub_date')
     return render(request,'catalogo/ajax/view-image.html', {'image': image, 'message': message, 'userLogId': userLogId})
 
 
@@ -299,7 +300,7 @@ def commentPush(request):
 
     else:
 
-        comment = Commentimage(user=idU, imageskin=idI, text=text)
+        comment = Commentimage(user=idU, imageskin=idI, text=text, pub_date=timezone.now())
         comment.save()
 
         data['status'] = True

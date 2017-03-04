@@ -183,8 +183,12 @@ li.white-panel .panel-text h4{
 }
 
 .image-view > div.image-view-text{
-    padding: 10px;
+    /*padding: 10px;*/
     background: white;
+}
+
+.details-image{
+    padding: 10px 12px 0px;
 }
 
 .image-view > div.image-view-text .view-date{
@@ -235,9 +239,14 @@ li.white-panel .panel-text h4{
     font-size: 1.6em;
 }
 
-.image-view div.image-view-input{
+.image-view div.panel-comments{
     position: absolute;
-    bottom: 12px;
+    width: 100%;
+}
+
+.image-view div.image-view-input{
+    position: relative;
+    bottom: -10px;
     left: 0;
     width: 95%;
     margin: 0 2.5% 0 2.5%;
@@ -256,6 +265,127 @@ li.white-panel .panel-text h4{
 .image-view-text h2{
     padding: 0;
     margin: 10px 0 0;
+}
+
+
+#more_images{
+    display: none;
+}
+
+@media (max-width: 400px)
+{
+    .image-view{
+        max-height: 450px !important;
+    }
+}
+
+@media (max-width: 767px)
+{
+    .ekko-lightbox{
+        background: rgba(0, 0, 0, 0.6);
+    }
+
+    .modal-dialog{
+        border-radius: .8em;
+    }
+
+    .modal-body{
+        background: white;
+    }
+
+    .image-view{
+        overflow: auto;
+        max-height: 650px;
+    }
+
+    .skinWeb .modal-dialog {
+        width: 83% !important;
+    }
+
+    .modal-dialog{
+        margin: 0;
+    }
+
+    .image-view > div.image-view-pic{
+        min-height: inherit;
+    }
+
+    .image-view-pic .image-opc-buttons{
+        margin-top: 135px;
+    }
+
+    .image-view > div.image-view-pic img{
+        position: relative;
+        top: 0;
+        transform: inherit;
+        margin-top: 120px;
+    }
+
+    .image-view > div.image-view-text{
+        position: inherit;
+        max-height: 200px;
+        min-height: initial;
+        overflow: visible;
+    }
+
+    .image-view div.image-view-input{
+        position: absolute;
+        top: -75px;
+    }
+
+    .image-view .panel-body{
+        margin-top: 90px;
+        height: auto;
+        overflow: inherit;
+        padding: 0 15px 15px;
+    }
+
+    .image-view div.panel-comments{
+        position: relative;
+    }
+
+    .details-image{
+        position: absolute;
+        top: 0;
+        background: white;
+        width: 100%;
+        left: 0;
+        padding: 10px 15px 20px;
+        z-index: 100;
+    }
+
+    .image-view-close{
+        font-size: 2.3em;
+    }
+
+    div.image-view-text .chat .chat-img{
+        width: 45px;
+        height: 45px;
+        line-height: 2.2;
+        font-size: 1.4em;
+        margin-top: -2px;
+    }
+
+    div.image-view-text .chat li{
+        padding-bottom: 10px;
+    }
+
+    #more_images{
+        text-align: center;
+        padding: 10px;
+        display: block;
+    }
+
+    #more_images button{
+        height: 60px;
+        width: 60px;
+        border-radius: 4em;
+        background: white;
+        font-size: 4.2em;
+        line-height: 0;
+        padding: 0;
+        border: none;
+    }
 }
 
 
@@ -361,8 +491,8 @@ li.white-panel .panel-text h4{
     overflow-y: scroll;
     height: 506px;
     width: 100%;
-    position: absolute;
-    margin: 13px 0px 0px -11px;
+    position: relative;
+    margin-top: 15px;
 }
 
 .panel-body::-webkit-scrollbar-track

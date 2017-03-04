@@ -33,6 +33,38 @@
             .image-view-pic .image-opc-buttons {
                 position: absolute;
             }
+
+            @media (max-width: 767px){
+
+                .skinWeb > .container{
+                    background: white;
+                }
+
+                .details-image{
+                    top: 55px;
+                }
+
+                .image-view{
+                    overflow: visible;
+                    max-height: none;
+                }
+
+                .image-view > div.image-view-text{
+                    max-height: none;
+                }
+
+                .image-view > div.image-view-pic img{
+                    margin-top: 110px;
+                }
+            }
+
+            @media (max-width: 400px)
+            {
+                .image-view{
+                    max-height: none !important;
+                }
+            }
+
         </style>
     {% endif %}
 
@@ -53,13 +85,17 @@
             </div>
         </div>
         <div class="col-sm-5 col-md-5 col-lg-4 image-view-text">
-            <h2>{{ image.name }} {{ image.id }}</h2>
-{#            <i class="fa fa-times image-view-close" aria-hidden="true"></i>#}
-            <p class="view-source">Fuente: <a href="{{ image.sourcedata.url }}" target="_blank">{{ image.sourcedata.name }}</a></p>
-            <span class="label label-success view-disease-name">{{ image.disease.name }}</span>
-            <span class="view-date"><i class="fa fa-calendar-o" aria-hidden="true"></i> {{ image.pub_date|date:'d/m/Y H:i' }}</span>
+            <div class="details-image">
+                <h2>{{ image.name }} {{ image.id }}</h2>
+    {#            <i class="fa fa-times image-view-close" aria-hidden="true"></i>#}
+                <p class="view-source">Fuente: <a href="{{ image.sourcedata.url }}" target="_blank">{{ image.sourcedata.name }}</a></p>
+                <span class="label label-success view-disease-name">{{ image.disease.name }}</span>
+                <span class="view-date"><i class="fa fa-calendar-o" aria-hidden="true"></i> {{ image.pub_date|date:'d/m/Y H:i' }}</span>
+            </div>
 
-            <div class="panel-body">
+            <div class="panel-comments">
+
+                <div class="panel-body">
                 <ul class="chat">
 
                     {% for text in message %}
@@ -83,10 +119,10 @@
 
                 </ul>
             </div>
-
-            <div class="input-group image-view-input">
+                <div class="input-group image-view-input">
                 <textarea id="comment-image-skin" class="form-control" name="comment" placeholder="Project Description"></textarea>
                 <span class="input-group-addon"><i class="glyphicon glyphicon-send"></i></span>
+            </div>
             </div>
         </div>
     </div>
@@ -157,7 +193,7 @@
 {#                        $('#skin-message').html(data['msg']).removeClass().addClass('alert alert-success').click()#}
                         console.log(data);
                         if (data.status){
-                            $('ul.chat').append(
+                            $('ul.chat').prepend(
                                 '<li class="right clearfix">'+
                                     '<span class="chat-img">'+data.nameshort+'</span>'+
                                     '<div class="chat-body clearfix">'+
@@ -168,13 +204,13 @@
                                         '<p>'+$('#comment-image-skin').val()+'</p>'+
                                     '</div>'+
                                 '</li>').promise().done(function () {
-                                    haux = $('div.panel-body').height()
-                                    $('div.panel-body').scrollTop(haux);
+{#                                    haux = $('div.panel-body').height()#}
+{#                                    $('div.panel-body').scrollTop(haux);#}
                                     $('#comment-image-skin').val('');
                                 });
 
                         }else{
-                            $('ul.chat').append('<li class="error-msg"><p class="bg-danger">'+data.msg+'</p></li>');
+                            $('ul.chat').prepend('<li class="error-msg"><p class="bg-danger">'+data.msg+'</p></li>');
                         }
                     },
 
@@ -192,8 +228,8 @@
             a.addClass('centered-image');
         }
 
-        h = $('div.panel-body').height();
-        $('div.panel-body').scrollTop(h);
+{#        h = $('div.panel-body').height();#}
+{#        $('div.panel-body').scrollTop(h);#}
 
         $('#toggle-event-image').bootstrapToggle({
             on: 'Enabled',

@@ -147,7 +147,7 @@
 {#                        $('#skin-message').html(data['msg']).removeClass().addClass('alert alert-success').click()#}
                         console.log(data);
                         if (data.status){
-                            $('ul.chat').append(
+                            $('ul.chat').prepend(
                                 '<li class="right clearfix">'+
                                     '<span class="chat-img">'+data.nameshort+'</span>'+
                                     '<div class="chat-body clearfix">'+
@@ -158,13 +158,13 @@
                                         '<p>'+$('#comment-image-skin').val()+'</p>'+
                                     '</div>'+
                                 '</li>').promise().done(function () {
-                                    haux = $('div.panel-body').height()
-                                    $('div.panel-body').scrollTop(haux);
+{#                                    haux = $('div.panel-body').height()#}
+{#                                    $('div.panel-body').scrollTop(haux);#}
                                     $('#comment-image-skin').val('');
                                 });
 
                         }else{
-                            $('ul.chat').append('<li class="error-msg"><p class="bg-danger">'+data.msg+'</p></li>');
+                            $('ul.chat').prepend('<li class="error-msg"><p class="bg-danger">'+data.msg+'</p></li>');
                         }
                     },
 

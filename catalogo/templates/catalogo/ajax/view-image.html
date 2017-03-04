@@ -9,45 +9,50 @@
             </div>
         </div>
         <div class="col-sm-5 col-md-5 col-lg-4 image-view-text">
-            <h2>{{ image.name }} {{ image.id }}</h2>
-            <i class="fa fa-times image-view-close" aria-hidden="true"></i>
-            <p class="view-source">Fuente: <a href="{{ image.sourcedata.url }}" target="_blank">{{ image.sourcedata.name }}</a></p>
-            <span class="label label-success view-disease-name">{{ image.disease.name }}</span>
-            <span class="view-date"><i class="fa fa-calendar-o" aria-hidden="true"></i> {{ image.pub_date|date:'d/m/Y H:i' }}</span>
-
-            <div class="panel-body">
-                <ul class="chat">
-
-                    {% for text in message %}
-                        {% if userLogId == text.user.id %}
-                            <li class="right clearfix">
-                        {% else %}
-                            <li class="left clearfix">
-                        {% endif %}
-                            <span class="chat-img pull-left">{{ text.user.first_name|first }}{{ text.user.last_name|first }}</span>
-                            <div class="chat-body clearfix">
-                                <div class="header">
-                                    <strong class="primary-font">{{ text.user.first_name }} {{ text.user.last_name|first }}.</strong>
-                                    <small class="text-muted">
-                                        <span class="glyphicon glyphicon-time"></span>{{ text.pub_date|date:'d/m/Y H:i' }}
-                                    </small>
-                                </div>
-                                <p>{{ text.text }}</p>
-                            </div>
-                        </li>
-                    {% endfor %}
-
-                </ul>
+            <div class="details-image">
+                <h2>{{ image.name }} {{ image.id }}</h2>
+                <i class="fa fa-times image-view-close" aria-hidden="true"></i>
+                <p class="view-source">Fuente: <a href="{{ image.sourcedata.url }}" target="_blank">{{ image.sourcedata.name }}</a></p>
+                <span class="label label-success view-disease-name">{{ image.disease.name }}</span>
+                <span class="view-date"><i class="fa fa-calendar-o" aria-hidden="true"></i> {{ image.pub_date|date:'d/m/Y H:i' }}</span>
             </div>
 
-            <div class="input-group image-view-input">
-                <textarea id="comment-image-skin" class="form-control" name="comment" placeholder="Project Description"></textarea>
-                <span class="input-group-addon"><i class="glyphicon glyphicon-send"></i></span>
+            <div class="panel-comments">
+                <div class="panel-body">
+                    <ul class="chat">
+
+                        {% for text in message %}
+                            {% if userLogId == text.user.id %}
+                                <li class="right clearfix">
+                            {% else %}
+                                <li class="left clearfix">
+                            {% endif %}
+                                <span class="chat-img pull-left">{{ text.user.first_name|first }}{{ text.user.last_name|first }}</span>
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        <strong class="primary-font">{{ text.user.first_name }} {{ text.user.last_name|first }}.</strong>
+                                        <small class="text-muted">
+                                            <span class="glyphicon glyphicon-time"></span>{{ text.pub_date|date:'d/m/Y H:i' }}
+                                        </small>
+                                    </div>
+                                    <p>{{ text.text }}</p>
+                                </div>
+                            </li>
+                        {% endfor %}
+
+                    </ul>
+                </div>
+
+                <div class="input-group image-view-input">
+                    <textarea id="comment-image-skin" class="form-control" name="comment" placeholder="Project Description"></textarea>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-send"></i></span>
+                </div>
+
             </div>
         </div>
         <script>
-            h = $('div.panel-body').height();
-            $('div.panel-body').scrollTop(h);
+{#            h = $('div.panel-body').height();#}
+{#            $('div.panel-body').scrollTop(h);#}
 
             $('#toggle-event-image').bootstrapToggle({
               on: 'Enabled',
