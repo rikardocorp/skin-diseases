@@ -82,7 +82,7 @@ li.white-panel .panel-text{
 
 
 li.white-panel .panel-text h4{
-    font-family: dosis;
+    font-family: dosis-regular;
     color: #424242;
     font-weight: bolder;
     font-size: 1.15em;
@@ -152,7 +152,7 @@ li.white-panel .panel-text h4{
 
 .image-view{
     margin: 0;
-    background: white;
+    /*background: white;*/
 }
 
 .image-view img{
@@ -184,6 +184,7 @@ li.white-panel .panel-text h4{
 
 .image-view > div.image-view-text{
     padding: 10px;
+    background: white;
 }
 
 .image-view > div.image-view-text .view-date{

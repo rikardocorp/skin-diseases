@@ -186,6 +186,7 @@ div.toggle{
     max-height: 275px;
     overflow: auto;
     padding: 0;
+    border: none;
 }
 
 #dropdown_comments ul.dropdown-menu li a{
@@ -208,6 +209,11 @@ div.toggle{
 
 #dropdown_comments ul.dropdown-menu li:not(.comments-new) a{
     color: #636363;
+}
+
+#dropdown_comments ul.dropdown-menu li:not(.comments-new) a:hover{
+    background: #313131;
+    /*color: #ababab;*/
 }
 
 #dropdown_comments ul.dropdown-menu li:not(.comments-new) a b{

@@ -11,6 +11,7 @@
         }
         .skin-category h4{
             font-family: dosis;
+            -webkit-font-family: dosis-regular;
             display: inline-block;
             width: auto;
             background: #424040;
@@ -19,12 +20,14 @@
             float: right;
             font-size: 2vw;
             clear: both;
+        }
 
+        .skin-category.safari-aux h4{
+            font-family: dosis-regular;
         }
 
         .skin-category h1{
-            font-family: dosis;
-            font-weight: bold;
+            font-family: dosis-regular;
             font-size: 3.8em;
             margin-bottom: 111px;
         }
@@ -40,6 +43,10 @@
             .skin-category h4{
                 font-size: 2.2vw;
             }
+
+            .skin-category.safari-aux h4{
+                font-size: 2vw;
+            }
         }
 
 
@@ -54,7 +61,11 @@
                 width: 95%;
             }
             .skin-category h4{
-                font-size: 2.7vw;
+                font-size: 2.6vw;
+            }
+
+            .skin-category.safari-aux h4{
+                font-size: 2.4vw;
             }
 
             .skin-category h1{
@@ -204,6 +215,13 @@
     <script src="{% static 'catalogo/plugins/chartJS/Chart.bundle.min.js' %}"></script>
     <script src="{% static 'catalogo/plugins/chartJS/utils.js' %}"></script>
     <script>
+
+        var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || safari.pushNotification);
+        if(isSafari)
+            $('.skin-category').addClass('safari-aux');
+{#            alert('ddd');#}
+
+
         var miChart;
 
         $('.skin-ico').click(function () {
