@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Disease, Imageskin, Sourcedata, Commentimage
+from .models import Category, Disease, Imageskin, Sourcedata, Commentimage, Commentuser
 # Register your models here.
 
 # Superuser
@@ -28,3 +28,4 @@ admin.site.register(Disease)
 admin.site.register(Imageskin)
 admin.site.register(Sourcedata)
 admin.site.register(Commentimage)
+admin.site.register(Commentuser)

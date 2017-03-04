@@ -3,7 +3,7 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonRespons
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views import generic, View
-from .models import Category, Disease, Imageskin, Sourcedata, Commentimage
+from .models import Category, Disease, Imageskin, Sourcedata, Commentimage, Commentuser
 from .forms import ImageskinForm
 from django.db.models import Count
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
@@ -22,12 +22,70 @@ class IndexView (generic.ListView):
         return Category.objects.all()
 
 
-def ObservView (request):
+def ObservView(request):
     imageskin = Imageskin.objects.all().filter(state=0)
     total = imageskin.count()
     template_name = 'catalogo/observ.html'
     images = render_to_string('catalogo/ajax/grid-image.html', {'imageskin': imageskin, 'userLog': True})
-    return render(request, template_name, {'images': images, 'total':total})
+    return render(request, template_name, {'images': images, 'total': total})
+
+
+def ImageViewer(request, id, idcomment):
+    template_name = 'catalogo/image_viewer.html'
+    userLogId = request.user.id
+    image = Imageskin.objects.get(id=id)
+    message = Commentimage.objects.all().filter(imageskin=id)
+
+    # Para registrar la vista del usuario
+    _user = User.objects.get(id=userLogId)
+
+    try:
+        _commentimage = Commentimage.objects.get(id=idcomment)
+
+        try:
+            Commentuser.objects.get(user=userLogId, commentimage=idcomment)
+        except:
+            new = Commentuser(user=_user, commentimage=_commentimage)
+            new.save()
+    except:
+        template_name = 'catalogo/404.html'
+        return render(request, template_name)
+
+
+    # imageDetail = render_to_string('catalogo/ajax/view-image.html', {'image': image, 'message': message, 'userLogId': userLogId})
+    return render(request, template_name, {'image': image, 'message': message, 'userLogId': userLogId, 'idcomment':idcomment})
+
+
+def ImageViewer2(request, id):
+    template_name = 'catalogo/image_viewer.html'
+    userLogId = request.user.id
+    image = Imageskin.objects.get(id=id)
+    message = Commentimage.objects.all().filter(imageskin=id)
+
+    # imageDetail = render_to_string('catalogo/ajax/view-image.html', {'image': image, 'message': message, 'userLogId': userLogId})
+    return render(request, template_name, {'image': image, 'message': message, 'userLogId': userLogId})
+
+
+def listComments(request):
+    data = {}
+    if request.user.is_authenticated():
+        userLogId = request.user.id
+        commentuser = Commentuser.objects.all().filter(user=userLogId).values('commentimage')
+        comments = Commentimage.objects.all().exclude(id__in=commentuser).exclude(user=userLogId).order_by('-pub_date')
+        comments2 = Commentimage.objects.all().filter(id__in=commentuser).exclude(user=userLogId).order_by('-pub_date')[:15]
+        # comments = Commentimage.objects.all().exclude(id__in=commentuser).order_by('-pub_date')
+        totalNewCom = comments.count()
+
+        total = comments.count()
+        data['status'] = True
+        data['comments'] = render_to_string('catalogo/ajax/list-comments.html', {'comments': comments, 'comments2': comments2, 'userLog': True})
+        data['total'] = totalNewCom
+    else:
+        data['status'] = False
+        data['comments'] = False
+
+    # time.sleep(1)
+    return JsonResponse(data)
 
 
 class DiseasesView(generic.DetailView):

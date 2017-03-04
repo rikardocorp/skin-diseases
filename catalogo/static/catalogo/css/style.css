@@ -175,3 +175,62 @@ div.toggle{
     margin-top: 6px;
     margin-right: 20px;
 }
+
+
+/* PARA COMENTARIOS */
+#dropdown_comments ul.dropdown-menu{
+    left: inherit;
+    right: 0;
+    min-width: 300px;
+
+    max-height: 275px;
+    overflow: auto;
+    padding: 0;
+}
+
+#dropdown_comments ul.dropdown-menu li a{
+    white-space: normal;
+    padding: 12px 20px;
+}
+
+#dropdown_comments ul.dropdown-menu li a b{
+    text-decoration: underline;
+}
+
+#dropdown_comments ul.dropdown-menu li{
+    border-bottom: 1px solid #f7f7f7;
+}
+
+#dropdown_comments ul.dropdown-menu li:not(.comments-new){
+    background: #080808;
+    border-bottom: 1px solid #1f1f1f;
+}
+
+#dropdown_comments ul.dropdown-menu li:not(.comments-new) a{
+    color: #636363;
+}
+
+#dropdown_comments ul.dropdown-menu li:not(.comments-new) a b{
+    color: #8a8a8a;
+}
+
+#dropdown_comments ul.dropdown-menu li.no-comments{
+    padding: 12px;
+    text-align: center;
+    color: white;
+}
+
+#dropdown_comments > a span.badge{
+
+}
+
+@media (max-width: 767px){
+    #dropdown_comments ul.dropdown-menu li{
+        border: none;
+        text-align: center;
+    }
+
+    #dropdown_comments ul.dropdown-menu{
+        background: #080808;
+    }
+}

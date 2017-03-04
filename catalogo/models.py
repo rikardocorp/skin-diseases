@@ -76,13 +76,22 @@ class Commentimage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     imageskin = models.ForeignKey(Imageskin, on_delete=models.CASCADE)
     text = models.CharField(max_length=500)
+    state = models.IntegerField(default=0)
+    pub_date = models.DateTimeField(default=timezone.now())
+
+    def __str__(self):
+        return str(self.id)+'_'+self.text+'_'+str(self.user.username)
+
+
+class Commentuser(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    commentimage = models.ForeignKey(Commentimage, on_delete=models.CASCADE)
     state = models.BooleanField(default=True)
     pub_date = models.DateTimeField(default=timezone.now())
 
     def __str__(self):
-        return str(self.id)+'_'+self.text
+        return str(self.id)+'_C:'+str(self.commentimage.id)+'_U:' + str(self.user.username)
+
 
 # a = Imageskin.objects.values('disease__category').annotate(Count('disease__category'))
-
-
 # a = Imageskin.objects.values('disease','disease__category').annotate(Count('disease'))

@@ -219,7 +219,10 @@
             return $(this).ekkoLightbox({
                 onContentLoaded: function () {
                     var a = $('.image-view .image-view-pic img');
-                    if (a[0].width > a[0].height){
+                    console.log(a[0].width);
+                    console.log(a[0].height);
+                    console.log(a.parent().height());
+                    if (a[0].width > a[0].height || a.parent().height() > a[0].height){
                         a.addClass('centered-image');
                     }
                 },

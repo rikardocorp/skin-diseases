@@ -1,0 +1,17 @@
+{% load static %}
+
+{% if not comments %}
+    <li class="no-comments">No hay comentarios nuevos.</li>
+{% endif %}
+
+{% for comment in comments  %}
+    <li class="comments-new"><a href="{% url 'catalogo:imageViewer' comment.imageskin_id comment.id %}">De <b>{{ comment.user.username }}</b> en <b>{{ comment.imageskin.disease.name }}</b>, imagen #{{ comment.imageskin.id }}</a></li>
+{% endfor %}
+
+
+{% for comment in comments2  %}
+    <li><a href="{% url 'catalogo:imageViewer' comment.imageskin_id comment.id %}">De <b>{{ comment.user.username }}</b> en <b>{{ comment.imageskin.disease.name }}</b>, imagen #{{ comment.imageskin.id }}</a></li>
+{% endfor %}
+
+
+

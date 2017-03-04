@@ -333,6 +333,21 @@ li.white-panel .panel-text h4{
 {
     margin: 0;
     color: #777777;
+    overflow: hidden;
+}
+
+.chat li.comments-new{
+    background: #ebffdd;
+    padding: 5px;
+    animation-name: parpadeo;
+    animation-duration: 1.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: 4;
+
+    -webkit-animation-name:parpadeo;
+    -webkit-animation-duration: 1.5s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: 4;
 }
 
 .panel .slidedown .glyphicon, .chat .glyphicon
@@ -367,8 +382,26 @@ li.white-panel .panel-text h4{
     background-color: #555;
 }
 
-
 ul.chat p.bg-danger{
     padding: 12px 0px;
     text-align: center;
+}
+
+
+@-moz-keyframes parpadeo{
+  0% { background: #ebffdd; }
+  50% { background: white; }
+  100% { background: #ebffdd; }
+}
+
+@-webkit-keyframes parpadeo {
+  0% { background: #ebffdd; }
+  50% { background: white; }
+  100% { background: #ebffdd; }
+}
+
+@keyframes parpadeo {
+  0% { background: #ebffdd; }
+  50% { background: white; }
+  100% { background: #ebffdd; }
 }

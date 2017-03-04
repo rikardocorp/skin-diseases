@@ -76,6 +76,35 @@
             $('#conte-message').fadeToggle();
         });
 
+        {# Cargar los comentarios #}
+        $.ajax({
+            type: 'POST',
+            url: '/catalogo/commentsLoad',
+            dataType: 'json',
+            data: {
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+            },
+            success: function (data, textStatus) {
+                if (data.status){
+                    $('#dropdown_comments ul.dropdown-menu').html(data.comments);
+                    $('#dropdown_comments > a span.badge').html(
+                        (data.total==0 ? '' : data.total)
+                    );
+                }
+            },
+            error: function(xhr, status, e) {
+                alert(status, e);
+            }
+        });
+
+
+        {# Para interactuar con los commentarios en el area de notificacion #}
+        $('#dropdown_comments').on('click','.dropdown-menu > li', function () {
+
+        });
+
+
+
     </script>
     {% block javascript %}
 

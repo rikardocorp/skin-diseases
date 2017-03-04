@@ -9,6 +9,11 @@
     <link href="{% static 'catalogo/plugins/lightbox/dist/ekko-lightbox.min.css' %}" rel="stylesheet">
     {% if user.is_authenticated %}
         <style>
+
+            body.skinWeb{
+                background: #1a1a1a;
+            }
+
             .skinWeb .modal-dialog{
                 max-width: 2000px !important;
             }
@@ -24,6 +29,10 @@
                 margin-top: 50px;
                 margin-bottom: 50px;
             }
+
+            .image-view-pic .image-opc-buttons {
+                position: absolute;
+            }
         </style>
     {% endif %}
 
@@ -32,24 +41,56 @@
 
 {# CONTENIDO #}
 {% block contenido %}
-    <!-- Introduction Row -->
-    <div class="row skin-introduction">
-        <div class="col-lg-12">
-            <h1>
-                <a href="{% url 'catalogo:index' %}"><i class="fa fa-database skin-ico" aria-hidden="true"></i></a>
-                Observaciones
-            </h1>
+
+
+    <div class="row image-view">
+        <div class="col-sm-7 col-md-7 col-lg-8 image-view-pic" data-id="{{ image.id }}">
+            <img src="{{ image.docfile.url }}" alt="">
+{#            <i class="fa fa-expand image-view-icon" aria-hidden="true"></i>#}
+            <div class="image-opc-buttons">
+                <input id="toggle-event-image" type="checkbox" data-id="{{ image.id }}" {% if image.state %}checked{% endif %} data-toggle="toggle" data-on="Ready" data-off="Not Ready" data-onstyle="success" data-offstyle="danger" data-size="mini">
+{#                <i class="fa fa-expand image-view-icon" aria-hidden="true"></i>#}
+            </div>
+        </div>
+        <div class="col-sm-5 col-md-5 col-lg-4 image-view-text">
+            <h2>{{ image.name }} {{ image.id }}</h2>
+{#            <i class="fa fa-times image-view-close" aria-hidden="true"></i>#}
+            <p class="view-source">Fuente: <a href="{{ image.sourcedata.url }}" target="_blank">{{ image.sourcedata.name }}</a></p>
+            <span class="label label-success view-disease-name">{{ image.disease.name }}</span>
+            <span class="view-date"><i class="fa fa-calendar-o" aria-hidden="true"></i> {{ image.pub_date|date:'d/m/Y H:i' }}</span>
+
+            <div class="panel-body">
+                <ul class="chat">
+
+                    {% for text in message %}
+                        {% if userLogId == text.user.id %}
+                            <li id="comment-{{ text.id }}" class="right clearfix">
+                        {% else %}
+                            <li id="comment-{{ text.id }}" class="left clearfix">
+                        {% endif %}
+                            <span class="chat-img pull-left">{{ text.user.first_name|first }}{{ text.user.last_name|first }}</span>
+                            <div class="chat-body clearfix">
+                                <div class="header">
+                                    <strong class="primary-font">{{ text.user.first_name }} {{ text.user.last_name|first }}.</strong>
+                                    <small class="text-muted">
+                                        <span class="glyphicon glyphicon-time"></span>{{ text.pub_date|date:'d/m/Y H:i' }}
+                                    </small>
+                                </div>
+                                <p>{{ text.text }}</p>
+                            </div>
+                        </li>
+                    {% endfor %}
+
+                </ul>
+            </div>
+
+            <div class="input-group image-view-input">
+                <textarea id="comment-image-skin" class="form-control" name="comment" placeholder="Project Description"></textarea>
+                <span class="input-group-addon"><i class="glyphicon glyphicon-send"></i></span>
+            </div>
         </div>
     </div>
-    <!-- /.row -->
 
-    <ul id="waterfall" class="">{{ images }}</ul>
-
-    {% if total == 0 %}
-        <div class="loading-img">
-            <i class="fa fa-user-md" aria-hidden="true"></i>
-        </div>
-    {% endif %}
 
 {% endblock contenido %}
 
@@ -57,7 +98,7 @@
 {# JAVASCRIPT #}
 {% block javascript %}
     <script src="{% static 'catalogo/plugins/bootstrap-toggle/js/bootstrap-toggle.min.js' %}"></script>
-    <script src="{% static 'catalogo/plugins/pinterest-style/newWaterfall.js' %}"></script>
+{#    <script src="{% static 'catalogo/plugins/pinterest-style/newWaterfall.js' %}"></script>#}
     <script src="{% static 'catalogo/plugins/lightbox/dist/ekko-lightbox.js' %}"></script>
 
     <script>
@@ -65,32 +106,7 @@
         var numPage = 1;
         $(document).ready(function() {
 
-            $('#waterfall').NewWaterfall({
-                width:260,
-            });
-
-            // Cambia el estado de activo e inactivo
-            $('#toggle-event').change(function (){
-                $.ajax({
-                    type: 'POST',
-                    url: '/catalogo/changeState',
-                    dataType: 'json',
-                    data: {
-                        csrfmiddlewaretoken: "{{ csrf_token }}",
-                        'model': 'disease',
-                        'id': $(this).attr('data-id'),
-                        'state': $(this).prop('checked'),
-                    },
-
-                    success: function (data, textStatus) {
-                        $('#skin-message').html(data['msg']).removeClass().addClass('alert alert-success').click()
-                    },
-
-                    error: function(xhr, status, e) {
-                        alert(status, e);
-                    }
-                });
-            });
+            $('.chat li#comment-{{ idcomment }}').addClass('comments-new');
 
             // Cambia el estado de activo e inactivo
             $('body').on('change','#toggle-event-image', function () {
@@ -122,12 +138,6 @@
                         alert(status, e);
                     }
                 });
-            });
-
-
-            //  Close Modal
-            $('body').on('click','i.image-view-close',function () {
-                $('.modal-header button.close').click();
             });
 
             // hacer comentario en imagen
@@ -176,29 +186,18 @@
         });
 
 
-        // Para el modal
-        $(document).delegate('*[data-toggle="lightbox"]:not([data-gallery="navigateTo"])', 'click', function(event) {
-            event.preventDefault();
-            return $(this).ekkoLightbox({
-                onContentLoaded: function () {
-                    var a = $('.image-view .image-view-pic img');
-                    if (a[0].width > a[0].height || a.parent().height() > a[0].height){
-                        a.addClass('centered-image');
-                    }
-                },
-                onShown: function() {
-                    if (window.console) {
-                        return console.log('Checking our the events huh?');
-                    }
-                },
-                onNavigate: function(direction, itemIndex) {
-                    if (window.console) {
-                        return console.log('Navigating '+direction+'. Current item: '+itemIndex);
-                    }
-                },
-                always_show_close : false,
-                loadingMessage : '<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>',
-            });
+
+        var a = $('.image-view .image-view-pic img');
+        if (a[0].width > a[0].height || a.parent().height() > a[0].height){
+            a.addClass('centered-image');
+        }
+
+        h = $('div.panel-body').height();
+        $('div.panel-body').scrollTop(h);
+
+        $('#toggle-event-image').bootstrapToggle({
+            on: 'Enabled',
+            off: 'Disabled'
         });
 
     </script>
