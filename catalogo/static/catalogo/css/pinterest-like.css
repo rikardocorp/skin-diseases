@@ -312,6 +312,7 @@ li.white-panel .panel-text h4{
 
     .image-view-pic .image-opc-buttons{
         margin-top: 135px;
+        position: absolute;
     }
 
     .image-view > div.image-view-pic img{
