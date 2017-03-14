@@ -95,3 +95,4 @@ db.sqlite3
 /catalogo/migrations/
 #skinWeb/settings.py
 #/.gitignore
+/editor

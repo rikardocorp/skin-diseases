@@ -309,3 +309,6 @@ def commentPush(request):
         # data['pub_date'] = comment.pub_date.strftime("%d/%m/%y %H:%M")
 
     return JsonResponse(data)
+
+
+

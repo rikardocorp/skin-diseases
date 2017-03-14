@@ -94,4 +94,7 @@ class Commentuser(models.Model):
 
 
 # a = Imageskin.objects.values('disease__category').annotate(Count('disease__category'))
-# a = Imageskin.objects.values('disease','disease__category').annotate(Count('disease'))
+# a = Imageskin.objects.values('disease','disease__category').annotate(Count('disease'))#
+
+# OBTENER TODAS LAS IMAGENES DE UNA CATEGORIA
+# i = Imageskin.objects.all().filter(disease__category=5)
