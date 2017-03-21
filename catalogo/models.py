@@ -66,6 +66,7 @@ class Imageskin(models.Model):
     docfile = models.FileField(upload_to='dataset', null=True, blank=True)
     description = models.CharField(max_length=1000, default='')
     state = models.BooleanField(default=True)
+    select = models.BooleanField(default=False)
     pub_date = models.DateTimeField(default=timezone.now())
 
     def __str__(self):

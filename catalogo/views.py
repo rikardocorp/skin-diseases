@@ -107,7 +107,7 @@ def loadImageskin(request, id, page):
         userLog = False
 
     image_list = Imageskin.objects.all().filter(disease=id)
-    paginator = Paginator(image_list,15)
+    paginator = Paginator(image_list, 15)
     data = {}
     if int(page) <= paginator.num_pages:
         try:
