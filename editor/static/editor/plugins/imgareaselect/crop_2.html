@@ -1,0 +1,223 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+
+      #workarea{
+        width: 90%;
+        background: gray;
+        height: 700px;
+        margin: 50px 5%;
+        border: 2px solid black;
+        overflow: auto;
+      }
+
+      #skinImage{
+        display: none;
+      }
+
+      #photo{
+        width: 600px;
+      }
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="css/imgareaselect-default.css" />
+    <link rel="stylesheet" type="text/css" href="css/imgareaselect-animated.css" />
+    <script type="text/javascript" src="scripts/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery.imgareaselect.pack.js"></script>
+
+
+
+    
+
+  </head>
+  <body>
+
+
+
+  <div class="container demo">
+    <div style="float: left; width: 50%;">
+      <p class="instructions">
+        Click and drag on the image to select an area. 
+      </p>
+   
+      <div class="frame" style="margin: 0 0.3em; width: 300px; height: 300px;">
+        <img id="photo" src="2_b.jpg">
+      </div>
+    </div>
+   
+    <div style="float: left; width: 50%;">
+      <p style="font-size: 110%; font-weight: bold; padding-left: 0.1em;">
+        Selection Preview
+      </p>
+      <div class="frame" style="margin: 0 1em;">
+        <div id="preview" style="width: 100px; height: 100px; overflow: hidden;">
+          <img src="2_b.jpg" style="">
+        </div>
+      </div>
+
+      <table style="margin-top: 1em;">
+        <thead>
+          <tr>
+            <th colspan="2" style="font-size: 110%; font-weight: bold; text-align: left; padding-left: 0.1em;">
+              Coordinates
+            </th>
+            <th colspan="2" style="font-size: 110%; font-weight: bold; text-align: left; padding-left: 0.1em;">
+              Dimensions
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="width: 10%;"><b>X<sub>1</sub>:</b></td>
+            <td style="width: 30%;"><input type="text" id="x1" value="-"></td>
+            <td style="width: 20%;"><b>Width:</b></td>
+            <td><input type="text" value="-" id="w"></td>
+          </tr>
+          <tr>
+            <td><b>Y<sub>1</sub>:</b></td>
+            <td><input type="text" id="y1" value="-"></td>
+            <td><b>Height:</b></td>
+            <td><input type="text" id="h" value="-"></td>
+          </tr>
+          <tr>
+            <td><b>X<sub>2</sub>:</b></td>
+            <td><input type="text" id="x2" value="-"></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><b>Y<sub>2</sub>:</b></td>
+            <td><input type="text" id="y2" value="-"></td>
+            <td></td>
+            <td></td>
+          </tr>
+
+
+          <tr><td> </td></tr>
+          <tr><td>Transformado</td></tr>
+          <tr>
+            <td style="width: 10%;"><b>X<sub>1</sub>:</b></td>
+            <td style="width: 30%;"><input type="text" id="xo1" value="-"></td>
+            <td style="width: 20%;"><b>Width:</b></td>
+            <td><input type="text" value="-" id="wo"></td>
+          </tr>
+          <tr>
+            <td><b>Y<sub>1</sub>:</b></td>
+            <td><input type="text" id="yo1" value="-"></td>
+            <td><b>Height:</b></td>
+            <td><input type="text" id="ho" value="-"></td>
+          </tr>
+          <tr>
+            <td><b>X<sub>2</sub>:</b></td>
+            <td><input type="text" id="xo2" value="-"></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><b>Y<sub>2</sub>:</b></td>
+            <td><input type="text" id="yo2" value="-"></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+    <script type="text/javascript">
+
+
+      var imgA = $('#photo')[0];
+
+      orig_w = imgA.naturalWidth;
+      orig_h = imgA.naturalHeight;
+
+      img_w = imgA.width;
+      img_h = imgA.height;
+
+      prev_w = 150;
+      prev_h = 150;
+
+      console.log(orig_w,orig_h,img_w,img_h);
+
+      // $('#preview > img').css({"width": "100px"});
+      // previewA = $('#preview > img').css("height");
+      // console.log(previewA);
+
+
+      function preview(img, selection) {
+          if (!selection.width || !selection.height)
+              return;
+
+          if(selection.width > selection.height){
+            aux = selection.width/prev_w;
+            prev_h = selection.height/aux;
+          }else{
+            aux = selection.height/prev_h;
+            prev_w = selection.width/aux;
+          }
+
+          $('#preview').css({
+              width:  prev_w,
+              height: prev_h,
+          });
+          
+          var scaleX = prev_w / selection.width;
+          var scaleY = prev_h / selection.height;
+
+          $('#preview img').css({
+              width: Math.round(scaleX * img_w),
+              height: Math.round(scaleY * img_h),
+              marginLeft: -Math.round(scaleX * selection.x1),
+              marginTop: -Math.round(scaleY * selection.y1)
+          });
+
+          // aux = selection.width/prev_w;
+          // prev_h = selection.height/aux;
+
+          // $('#preview').css({
+          //     width:  prev_w,
+          //     height: prev_h,
+          // });
+
+          $('#x1').val(selection.x1);
+          $('#y1').val(selection.y1);
+          $('#x2').val(selection.x2);
+          $('#y2').val(selection.y2);
+          $('#w').val(selection.width);
+          $('#h').val(selection.height);  
+
+
+          scaleOriginal = orig_w / img_w;
+          $('#xo1').val(parseInt(selection.x1*scaleOriginal));
+          $('#yo1').val(parseInt(selection.y1*scaleOriginal));
+          $('#xo2').val(parseInt(selection.x2*scaleOriginal));
+          $('#yo2').val(parseInt(selection.y2*scaleOriginal));
+          $('#wo').val(parseInt(selection.width*scaleOriginal));
+          $('#ho').val(parseInt(selection.height*scaleOriginal));    
+      }
+
+      $(function () {
+          $('#photo').imgAreaSelect({ 
+            // aspectRatio: '1:1',
+            handles: true,
+            fadeSpeed: 200, 
+            onSelectChange: preview 
+          });
+      });
+
+    </script>
+  </body>
+</html>

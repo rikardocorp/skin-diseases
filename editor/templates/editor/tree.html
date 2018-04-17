@@ -1,0 +1,400 @@
+{% extends 'catalogo/main/base.html' %}
+{% load static %}
+
+{# CSS #}
+{% block stylesheet %}
+    <link href="{% static 'catalogo/plugins/bootstrap-toggle/css/bootstrap-toggle.min.css' %}" rel="stylesheet">
+    <link href="{% static 'editor/plugins/imgareaselect/css/imgareaselect-animated.css' %}" rel="stylesheet" />
+    <link href="{% static 'catalogo/css/pinterest-like.css' %}" rel="stylesheet"/>
+    <link href="{% static 'catalogo/plugins/lightbox/dist/ekko-lightbox.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'editor/css/tree.css' %}" rel="stylesheet"/>
+    <style>
+
+        #waterfall{
+            margin-top: 0;
+        }
+
+        .select-item{
+            background: #222222;
+            color: white;
+        }
+
+        .skinWeb .modal-dialog{
+            max-width: none !important;
+            width: 90% !important;
+        }
+
+        #photo{
+            display: block;
+            width: initial;
+            margin: 0 auto;
+        }
+
+        .panel-comments table{
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .panel-comments table td,
+        .panel-comments table th{
+            padding: 2px 8px;
+        }
+
+        .panel-comments table input{
+            width: 100%;
+        }
+
+        .tools input{
+            border: none;
+            box-shadow: none;
+            background: #222222;
+            color: white;
+            text-align: center;
+        }
+
+        .tools input:focus{
+            outline-color: #222222;
+        }
+
+        .tree li.parent_li.tools{
+            padding-top: 0;
+        }
+
+        .tree li.parent_li.tools>span:hover,
+        .tree li.parent_li.tools>span:hover+ul li span,
+        .tree li.parent_li.tools span{
+            background: #222222;
+            border: 1px solid #222222;
+            color: white;
+        }
+
+        b.count-select {
+            color: green;
+        }
+
+        b.count-total {
+            color: dodgerblue;
+        }
+
+    </style>
+
+{% endblock %}
+
+
+{# CONTENIDO #}
+{% block contenido %}
+
+    <div class="row">
+        <div class="tree col-xs-4 col-md-3">
+            <ul>
+                <li class="tools">
+                    <span><i class="fa fa-wrench"></i> Generar Crops</span>
+                    <ul>
+                        <li><span class="select-item"><input id="scale" type="number" placeholder="Escala (0-100)%" title="Escala (0-100)%"></span></li>
+                        <li><span class="select-item"><input id="directory" type="text" placeholder="Nombre directorio" title="Nombre directorio"></span></li>
+                        <li><span class="select-item"><input id="resize" type="number" placeholder="Resize Image AxA" title="Resize Image AxA"></span></li>
+                        <li><span class="select-item"><input id="type" type="text" placeholder="category | disease" title="Distribucion de los directorios"></span></li>
+                        <li><span class="select-item"><input id="generateCrop" type="button" value="Generar"></span></li>
+                    </ul>
+                </li>
+                {% for disease in list %}
+                    <li id="disease-{{ disease.id }}" class="item-disease" data-category="{{ disease.category.id }}" data-name="{{ disease.category.name }}" data-disease="{{ disease.id }}">
+                        <span><i class="icon-folder-open"></i> {{ disease.name }} <b class="count-select">0</b>/<b class="count-total">0</b> </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="col-xs-8 col-md-9 well">
+            <ul id="waterfall" class=""></ul>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+
+{# JAVASCRIPT #}
+{% block javascript %}
+    <script src="{% static 'catalogo/plugins/bootstrap-toggle/js/bootstrap-toggle.min.js' %}"></script>
+    <script src="{% static 'editor/plugins/imgareaselect/scripts/jquery.imgareaselect.pack.js' %}"></script>
+    <script src="{% static 'catalogo/plugins/pinterest-style/newWaterfall.js' %}"></script>
+    <script src="{% static 'catalogo/plugins/lightbox/dist/ekko-lightbox.js' %}"></script>
+
+    <script>
+
+        var gate = 1;
+        var numPage = 1;
+        var disease_id = 0;
+
+        $(function () {
+
+            // Distribuye las diseases por categorias
+
+            $li = $('.tree li.item-disease');
+            id_ant = -1;
+            $li.each(function(index, element) {
+                id_cat = $(element).data('category');
+                name = $(element).data('name');
+
+                if(id_cat != id_ant)
+                {
+                    id_ant = id_cat;
+                    $('.tree > ul').append('<li id="cat_'+id_cat+'" data-category="'+id_cat+'"><span><i class="fa fa-minus-square" aria-hidden="true"></i> '+ name +'</span><ul></ul></li>');
+                    $('#cat_'+id_ant+' ul').append(element);
+                }
+                else{
+                    $('#cat_'+id_ant+' ul').append(element);
+                }
+            });
+
+            // Funciones para manipular el Tree
+
+            $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
+            $('.tree li.parent_li > span').on('click', function (e) {
+                var children = $(this).parent('li.parent_li').find(' > ul > li');
+                console.log(children);
+                if (children.is(":visible")) {
+                    children.hide('fast');
+                    $(this).parent().removeClass('openSelect')
+                    $(this).attr('title', 'Expand this branch').find(' > i').addClass('fa-plus-square').removeClass('fa-minus-square');
+                } else {
+                    children.show('fast');
+                    $(this).parent().addClass('openSelect')
+                    $(this).attr('title', 'Collapse this branch').find(' > i').addClass('fa-minus-square').removeClass('fa-plus-square');
+                }
+                e.stopPropagation();
+            });
+
+            $('.tree li.parent_li span').click();
+{#            $('.tree li.item-disease > span').click();#}
+
+            // Ver imagenes por Disease
+
+            $('.tree li.item-disease > span').click(function () {
+
+                $('li.item-disease span').removeClass('select-item');
+                $(this).addClass('select-item');
+
+                gate = 0;
+                numPage = 1;
+                disease_id = $(this).parent().data('disease');
+                var urlx = '/editor/imageskin/'+disease_id+'/'+ numPage +'/';
+
+                $('#waterfall').html('');
+                scroll_load_data(urlx);
+            });
+
+            // Para mostrar imagenes
+            $('#waterfall').NewWaterfall({
+                width:160,
+            });
+
+            // Cargar datos - event scroll
+            setInterval(function(){
+                if($(window).scrollTop() >= $(document).height() - $(window).height() + 0  && !gate)
+                {
+                    console.log('abierto');
+                    urlx = '/editor/imageskin/'+disease_id+'/'+ numPage +'/';
+                    console.log(urlx);
+                    scroll_load_data(urlx);
+                }
+            },60);
+
+            // funcion para cargar mas imagenes
+            var scroll_load_data = function (urlx) {
+                console.log(gate);
+                if (gate==0)
+                {
+                    gate = 1;
+                    $('.loading-img').html('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>');
+
+                    $.ajax({
+                        type: 'POST',
+                        url: urlx,
+                        dataType: 'json',
+                        data: {
+                            csrfmiddlewaretoken: "{{ csrf_token }}",
+                        },
+                        success: function (data, textStatus) {
+                            if (data.data) {
+                                $('#waterfall').append(data.data).promise().done(function () {
+                                    gate = 0;
+                                    numPage++;
+                                    $('.loading-img').html('');
+                                })
+                            }else{
+                                $('.loading-img').html('<p>No hay mas resultados...</p>');
+                            }
+                        },
+                        error: function(xhr, status, e) {
+                            alert(status, e);
+                        }
+                    });
+                }
+            };
+
+            // Get Count images by select
+            getCountData('/editor/count_crop_image');
+            getCountData('/editor/count_crop_image', 1);
+        });
+
+
+        //  Close Modal
+        $('body').on('click','i.image-view-close',function () {
+            $('.modal-header button.close').click();
+        });
+
+        // Cambia el estado de activo e inactivo
+        $('body').on('change','#toggle-event-image', function () {
+            idImage = $(this).data('id');
+            $.ajax({
+                type: 'POST',
+                url: '/editor/changeSelect',
+                dataType: 'json',
+                data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                    'model': 'imageskin',
+                    'id': $(this).attr('data-id'),
+                    'select': $(this).prop('checked'),
+                },
+
+                success: function (data, textStatus) {
+
+                    if (data.status){
+                        var $list = $('#list-' + idImage + ' > div');
+                        if (!data.select)
+                            $list.removeClass('image-check').find('i').remove();
+                        else
+                            $list.addClass('image-check').prepend('<i class="fa fa-check-square" aria-hidden="true"></i>');
+                    }else{
+                        console.log(data.msg);
+                        $('#toggle-event-image').click();
+                    }
+                },
+
+                error: function(xhr, status, e) {
+                    alert(status, e);
+                }
+            });
+        });
+
+
+        // Generar crop Total
+        $('#generateCrop').click(function(){
+
+            var scale = $('#scale').val() ? $('#scale').val(): 0;
+            var directory = ($('#directory').val() ? $('#directory').val(): 'default').replace(/[^A-Z0-9]/gi,'');
+            var resize = $('#resize').val() ? $('#resize').val(): 0;
+            var typeA = ($('#type').val() ? $('#type').val(): 'default').replace(/[^A-Z0-9]/gi,'');
+
+            var select = $('.tree li.openSelect');
+            var list_idx = []
+            for(var i=1;i<select.length;i++){
+                idAux = $(select[i]).data('category');
+                list_idx.push(idAux);
+            }
+
+            console.log('/editor/generateCropAll/'+scale+'/'+directory+'/'+resize+'/'+typeA+'/'+list_idx.join('o')+'/');
+            $.ajax({
+                type: 'POST',
+                url: '/editor/generateCropAll/'+scale+'/'+directory+'/'+resize+'/'+typeA+'/'+list_idx.join('o')+'/',
+                dataType: 'json',
+                data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                },
+
+                success: function (data, textStatus) {
+                    console.log(data);
+                },
+
+                error: function(xhr, status, e) {
+                    alert(status, e);
+                }
+            });
+        });
+
+        function myScape( myid ) {
+            return myid.replace( /(:|\.|\[|\]|,|=|@)/g, "\\$1" );
+        }
+
+        // Para el modal
+        $(document).delegate('*[data-toggle="lightbox"]:not([data-gallery="navigateTo"])', 'click', function(event) {
+            event.preventDefault();
+            return $(this).ekkoLightbox({
+                onContentLoaded: function () {
+
+                    var a = $('.image-view .image-view-pic img');
+{#                    console.log(a[0].width);#}
+{#                    console.log(a[0].height);#}
+{#                    console.log(a.parent().height());#}
+                    if (a[0].width > a[0].height || a.parent().height() > a[0].height){
+{#                        a.addClass('centered-image');#}
+                    }
+                    console.log('click');
+                    $('#set_coord').click();
+                },
+                onShown: function() {
+                    if (window.console) {
+                        return console.log('Checking our the events huh?');
+                    }
+                },
+                onNavigate: function(direction, itemIndex) {
+                    if (window.console) {
+                        return console.log('Navigating '+direction+'. Current item: '+itemIndex);
+                    }
+                },
+                onHide: function() {
+                    $("[class*='imgareaselect-outer']").remove();
+                    $("[class*='imgareaselect-selection']").parent().remove();
+                },
+                onNavigate: function() {
+                    $("[class*='imgareaselect-outer']").remove();
+                    $("[class*='imgareaselect-selection']").parent().remove();
+                },
+                always_show_close : false,
+                loadingMessage : '<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>',
+            });
+        });
+
+        var getCountData = function (url , cen) {
+            var class_b
+            if (cen === undefined)
+                cen = 0;
+
+            if(cen == 1)
+                class_b = 'count-total';
+            else
+                class_b = 'count-select';
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: 'json',
+                data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                    'opc':cen,
+                },
+                success: function (data, textStatus) {
+                    r = data.a
+
+                    var idx   = data.id;
+                    var count = data.count;
+                    var total = data.id.length;
+
+                    for(var i=0; i< total;i++)
+                    {
+                        $item = $('li#disease-'+idx[i][0]+' b.'+class_b);
+                        $item.text('');
+                        $item.append(count[i][0]);
+                    }
+                },
+		        error: function(xhr, status, e) {
+		            alert(status, e);
+		        }
+            });
+        }
+
+
+    </script>
+{% endblock %}

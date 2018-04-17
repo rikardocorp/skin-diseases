@@ -1,0 +1,381 @@
+
+    <div class="row image-view">
+
+        <div class="frame col-sm-8 col-md-8 col-lg-8 image-view-pic" data-id="{{ image.id }}">
+{#            <div class="frame">#}
+                <img id="photo" data-disease="{{ image.id }}"  src="{{ image.docfile.url }}" alt="">
+{#            </div>#}
+            <div class="image-opc-buttons">
+                <input id="toggle-event-image" type="checkbox" data-id="{{ image.id }}" {% if image.select %}checked{% endif %} data-toggle="toggle" data-on="Ready" data-off="Not Ready" data-onstyle="success" data-offstyle="danger" data-size="mini">
+            </div>
+        </div>
+
+
+
+        <div class="col-sm-4 col-md-4 col-lg-4 image-view-text">
+            <div class="details-image">
+                <h2>{{ image.name }} {{ image.id }}</h2>
+                <i class="fa fa-times image-view-close" aria-hidden="true"></i>
+                <p class="view-source">Fuente: <a href="{{ image.sourcedata.url }}" target="_blank">{{ image.sourcedata.name }}</a></p>
+                <span class="label label-success view-disease-name">{{ image.disease.name }}</span>
+                <span class="view-date"><i class="fa fa-calendar-o" aria-hidden="true"></i> {{ image.pub_date|date:'d/m/Y H:i' }}</span>
+            </div>
+
+            <div class="panel-comments">
+                <table id="table-coord" style="margin-top: 1em;">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Coordinates</th>
+                            <th colspan="2">Dimensions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b>X<sub>1</sub>:</b></td>
+                            <td><input type="text" id="x1" value="-"></td>
+                            <td><b>Width:</b></td>
+                            <td><input type="text" value="-" id="w"></td>
+                        </tr>
+                        <tr>
+                            <td><b>Y<sub>1</sub>:</b></td>
+                            <td><input type="text" id="y1" value="-"></td>
+                            <td><b>Height:</b></td>
+                            <td><input type="text" id="h" value="-"></td>
+                        </tr>
+                        <tr>
+                            <td><b>X<sub>2</sub>:</b></td>
+                            <td><input type="text" id="x2" value="-"></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><b>Y<sub>2</sub>:</b></td>
+                            <td><input type="text" id="y2" value="-"></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+
+
+                        <tr><td colspan="4"> </td></tr>
+                        <tr><td colspan="4">Medidas Reales</td></tr>
+
+                        <tr>
+                            <td><b>X<sub>1</sub>:</b></td>
+                            <td><input type="text" id="xo1" value="{{ crop.x }}"></td>
+                            <td><b>Width:</b></td>
+                            <td><input type="text" value="{{ crop.width }}" id="wo"></td>
+                        </tr>
+                        <tr>
+                            <td><b>Y<sub>1</sub>:</b></td>
+                            <td><input type="text" id="yo1" value="{{ crop.y }}"></td>
+                            <td><b>Height:</b></td>
+                            <td><input type="text" id="ho" value="{{ crop.height }}"></td>
+                        </tr>
+                        <tr>
+                            <td><b>X<sub>2</sub>:</b></td>
+                            <td><input type="text" id="xo2" value="-"></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><b>Y<sub>2</sub>:</b></td>
+                            <td><input type="text" id="yo2" value="-"></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <button id="set_coord" type="button" class="btn btn-info btn-block" style="" >Set</button>
+                            </td>
+                            <td>
+                                <button id="reset_coord" type="button" class="btn btn-danger btn-block" >Reset</button>
+                            </td>
+                            <td>
+                                <button id="crop_coord" type="button" class="btn btn-primary btn-block">Crop</button>
+                            </td>
+                            <td>
+                                <button id="save_coord" type="button" class="btn btn-success btn-block">Save</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            </td>
+                            <td>Scale(+/-):</td>
+                            <td><input id="scale_val" type="number" value="0"></td>
+                            <td>
+                                <button id="transform_coord" type="button" class="btn btn-warning btn-block">Transform</button>
+                            </td>
+                        </tr>
+
+
+                        <tr><td colspan="4"> </td></tr>
+                        <tr><td colspan="4">Transformaciones</td></tr>
+
+                        <tr>
+                            <td><b>rot<sub>0</sub>:</b></td>
+                            <td><input class="check_trans" type="checkbox" name="rot0" id="rot0" value="0"></td>
+                            <td><b>rot<sub>90</sub>:</b></td>
+                            <td><input class="check_trans" type="checkbox" name="rot90" id="rot90" value="90"></td>
+                        </tr>
+                        <tr>
+                            <td><b>rot<sub>180</sub>:</b></td>
+                            <td><input class="check_trans" type="checkbox" name="rot180" id="rot180" value="180"></td>
+                            <td><b>rot<sub>270</sub>:</b></td>
+                            <td><input class="check_trans" type="checkbox" name="rot270" id="rot270" value="270"></td>
+                        </tr>
+                        <tr><td colspan="4"><input type="hidden" value="{{ crop.transform }}" name="transform" id="transform"></td></tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+
+        <script>
+
+            $('#toggle-event-image').bootstrapToggle({
+                on: 'Enabled',
+                off: 'Disabled'
+            });
+
+            $(function () {
+
+                $('table#table-coord input[type=text]').prop('disabled', true);
+
+                $frame = $('.frame');
+                var w_frame = $frame.width();
+                var h_frame = $frame.height();
+
+                var $photo = $('#photo');
+                var orig_w = $photo[0].naturalWidth;
+                var orig_h = $photo[0].naturalHeight;
+                var img_w = $photo[0].width;
+                var img_h = $photo[0].height;
+
+
+                console.log(orig_w,orig_h,img_w,img_h);
+
+                if(img_w < img_h){
+                    if(w_frame/h_frame < img_w/img_h) {
+                        $photo.css({'width': w_frame});
+                        $photo.addClass('centered-image');
+                    }
+                    else
+                        $photo.css({'height':h_frame});
+                }
+                else{
+                    if(w_frame/h_frame < img_w/img_h) {
+                        $photo.css({'width': w_frame});
+                        $photo.addClass('centered-image');
+                    }
+                    else
+                        $photo.css({'height':h_frame});
+                }
+
+                var ias = $('#photo').imgAreaSelect({
+                    instance: true,
+                    // aspectRatio: '1:1',
+                    handles: true,
+                    fadeSpeed: 200,
+                    onSelectChange: preview,
+{#                    persistent: true#}
+                });
+
+
+
+                // Datos de la Imagen
+                orig_w = $photo[0].naturalWidth;
+                orig_h = $photo[0].naturalHeight;
+                img_w = $photo[0].width;
+                img_h = $photo[0].height;
+                var scaleOriginal = orig_w / img_w;
+
+                console.log(orig_w,orig_h,img_w,img_h);
+                function preview(img, selection)
+                {
+                    // Recorte temporal
+                    $('#x1').val(selection.x1);
+                    $('#y1').val(selection.y1);
+                    $('#x2').val(selection.x2);
+                    $('#y2').val(selection.y2);
+                    $('#w').val(selection.width);
+                    $('#h').val(selection.height);
+
+                    // Recorte Real
+{#                    scaleOriginal = orig_w / img_w;#}
+                    $('#xo1').val(parseInt(selection.x1*scaleOriginal));
+                    $('#yo1').val(parseInt(selection.y1*scaleOriginal));
+                    $('#xo2').val(parseInt(selection.x2*scaleOriginal));
+                    $('#yo2').val(parseInt(selection.y2*scaleOriginal));
+                    $('#wo').val(parseInt(selection.width*scaleOriginal));
+                    $('#ho').val(parseInt(selection.height*scaleOriginal));
+                }
+
+                $('#save_coord').click(function(){
+                    $.ajax({
+                        type: 'POST',
+                        url: '/editor/saveCoord',
+                        dataType: 'json',
+                        data: {
+                            csrfmiddlewaretoken: "{{ csrf_token }}",
+                            'x': $('#xo1').val(),
+                            'y': $('#yo1').val(),
+                            'width': $('#wo').val(),
+                            'height': $('#ho').val(),
+                            'originalWidth': orig_w,
+                            'originalHeight': orig_h,
+                            'imageskin': $('#photo').data('disease'),
+                            'transform' : $('#transform').val(),
+                        },
+
+                        success: function (data, textStatus) {
+                            console.log(data);
+                        },
+
+                        error: function(xhr, status, e) {
+                            alert(status, e);
+                        }
+                    });
+                });
+
+                // Load Cheks
+                val_check = $('input#transform').val();
+                if(val_check!='') {
+                    val_check = val_check.split("_");
+                    console.log(val_check)
+                    if(val_check[0]=='1')
+                        $('#rot0')[0].checked = true
+                    if(val_check[1]=='1')
+                        $('#rot90')[0].checked = true
+                    if(val_check[2]=='1')
+                        $('#rot180')[0].checked = true
+                    if(val_check[3]=='1')
+                        $('#rot270')[0].checked = true
+                }
+                else
+                    console.log('vacio')
+
+                // Transformaciones string on/off
+                $('input.check_trans').click(function(){
+                    var rot0, rot90, rot180, rot270;
+                    var cen = 0 ;
+
+                    if($('input#rot0')[0].checked == true){
+                        rot0 = '1';cen = 1;
+                    }
+                    else
+                        rot0 = '0';
+
+                    if($('input#rot90')[0].checked == true){
+                        rot90 = '1';cen = 1;
+                    }
+                    else
+                        rot90 = '0';
+
+                    if($('input#rot180')[0].checked == true){
+                        rot180 = '1';cen = 1;
+                    }
+                    else
+                        rot180 = '0';
+
+                    if($('input#rot270')[0].checked == true){
+                        rot270 = '1';cen = 1;
+                    }
+                    else
+                        rot270 = '0';
+
+                    if(cen == 0)
+                        $('input#transform').val('')
+                    else
+                        $('input#transform').val(rot0+'_'+rot90+'_'+rot180+'_'+rot270)
+                });
+
+
+                // Setear coordenadas
+                var xs = 0;
+                var ys = 0;
+                var ws = 0;
+                var hs = 0;
+
+                $('#set_coord').click(function(){
+                    {% if crop %}
+                        xs = parseInt(parseInt($('#xo1').attr('value'))/scaleOriginal);
+                        ys = parseInt(parseInt($('#yo1').attr('value'))/scaleOriginal);
+                        ws = parseInt(parseInt($('#wo').attr('value'))/scaleOriginal);
+                        hs = parseInt(parseInt($('#ho').attr('value'))/scaleOriginal);
+
+                        console.log(xs,ys,ws,hs);
+                        ias.setSelection(xs, ys, (xs+ws), (ys+hs), true);
+                        ias.setOptions({ show: true, persistent:true });
+                        ias.update();
+                    {% endif %}
+                });
+
+                $('#reset_coord').click(function(){
+                    ias.cancelSelection();
+                    ias.setOptions({ show: false, persistent:false });
+                    ias.update();
+                    $('#table-coord input[type=text]').val('');
+{#                    $('#table-coord input').attr('value','');#}
+                });
+
+
+                $('#crop_coord').click(function(){
+                    console.log('/editor/createCropImage/'+$('#photo').data('disease'));
+                    $.ajax({
+                        type: 'POST',
+                        url: '/editor/createCropImage/'+$('#photo').data('disease')+'/',
+                        dataType: 'json',
+                        data: {
+                            csrfmiddlewaretoken: "{{ csrf_token }}",
+                        },
+
+                        success: function (data, textStatus) {
+                            console.log(data);
+                        },
+
+                        error: function(xhr, status, e) {
+                            alert(status, e);
+                        }
+                    });
+                });
+
+
+                $('#transform_coord').click(function(){
+                    console.log('/editor/transform_coord/'+$('#photo').data('disease'));
+                    $.ajax({
+                        type: 'POST',
+                        url: '/editor/transform_coord/'+$('#photo').data('disease')+'/'+$('#scale_val').val()+'/',
+                        dataType: 'json',
+                        data: {
+                            csrfmiddlewaretoken: "{{ csrf_token }}",
+                        },
+
+                        success: function (data, textStatus) {
+                            var a1 = data.corregido;
+                            console.log(data);
+                            console.log(a1.x, a1.y, (a1.w), (a1.h));
+                            ias.setSelection(
+                                a1.x/scaleOriginal,
+                                a1.y/scaleOriginal,
+                                (a1.x+ a1.w)/scaleOriginal,
+                                (a1.y+ a1.h)/scaleOriginal,
+                                true);
+
+                            ias.setOptions({ show: true, persistent:true });
+                            ias.update();
+                        },
+
+                        error: function(xhr, status, e) {
+                            alert(status, e);
+                        }
+                    });
+                });
+
+            });
+
+
+        </script>
+
+    </div>
