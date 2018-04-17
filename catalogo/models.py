@@ -1,7 +1,7 @@
 import datetime
 from django.db import models
 from django.utils import timezone
-from slugify import slugify
+# from slugify import slugify
 from django.contrib.auth.models import User
 # Create your models here.
 
@@ -46,7 +46,7 @@ class Disease(models.Model):
         return self.name
 
     def directory(self):
-        return slugify(self.name)
+        return self.name
 
     def cover(self):
         aux = self.imageskin_set.last()

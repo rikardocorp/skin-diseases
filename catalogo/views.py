@@ -69,7 +69,7 @@ def ImageViewer2(request, id):
 
 def listComments(request):
     data = {}
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         userLogId = request.user.id
         commentuser = Commentuser.objects.all().filter(user=userLogId).values('commentimage')
         comments = Commentimage.objects.all().exclude(id__in=commentuser).exclude(user=userLogId).order_by('-pub_date')
@@ -101,7 +101,7 @@ class ImageskinView(generic.DetailView):
 
 def loadImageskin(request, id, page):
 
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         userLog = True
     else:
         userLog = False
@@ -280,7 +280,7 @@ def state(request, category_id):
 def commentPush(request):
 
     data = {}
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         userLog = request.user.id
     else:
         userLog = False

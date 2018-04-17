@@ -23,6 +23,7 @@ from django.views.generic import RedirectView
 urlpatterns = [
     url(r'^$', RedirectView.as_view(url='/catalogo')),
     url(r'^catalogo/', include('catalogo.urls')),
+    url(r'^editor/', include('editor.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/login/', auth_views.login, {'template_name': 'catalogo/login.html'},name='login'),
     url(r'^logout/', auth_views.logout_then_login, name='logout'),
