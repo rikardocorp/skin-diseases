@@ -27,7 +27,8 @@ SECRET_KEY = '-5e5$-@src3pafhra+o034-t$$ikskls=+x5oq3)rqtam3lk(0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['104.236.249.194', 'rikardocorp.me']
 
 
 # Application definition
