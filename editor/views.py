@@ -62,7 +62,7 @@ def count_crop_image_by_disease(request):
 
 def loadImageskin(request, id, page):
 
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         userLog = True
     else:
         userLog = False
